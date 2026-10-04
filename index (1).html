@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toán học trong cuộc sống - Sản phẩm số của em</title>
+<style>
+:root{
+  --bg:#f4f7fa;
+  --card:#ffffff;
+  --side:#eef3f8;
+  --line:#d0dce8;
+  --text:#1a2530;
+  --muted:#5a6b7c;
+  --green:#013E91;
+  --mint:#1a66cc;
+  --soft:#dbe7f6;
+  --field:#f0f4f8;
+  --red:#c0392b;
+  --amber:#8a5a00
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.55}
+button,input,textarea{font:inherit}
+:focus-visible{outline:3px solid #013E91;outline-offset:2px}
+.app{min-height:100vh;display:flex}
+.sidebar{width:280px;flex:0 0 280px;background:var(--side);padding:26px 18px;position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line)}
+.brand{padding:6px 8px 20px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.brand h1{font-size:24px;line-height:1.2;margin:0 0 8px;color:#013E91}
+.brand p{margin:0;color:var(--muted);font-size:14px}
+.menu{display:grid;gap:6px}
+.menu button{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:var(--text);padding:12px 13px;border-radius:12px;cursor:pointer;font-weight:700;line-height:1.3}
+.menu button:hover{background:#e2ebf4}
+.menu button.active{background:var(--soft);border-color:#b0cae8;color:#013E91}
+.menu .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:99px;background:#ffffff;color:var(--green);margin-right:9px;font-size:15px;box-shadow:0 2px 4px rgba(0,0,0,0.05)}
+.sep{height:1px;background:var(--line);margin:8px 0}
+.main{flex:1;min-width:0;padding:24px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+.content{min-width:0}
+.aside{position:sticky;top:20px;display:grid;gap:16px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(1,62,145,.05)}
+.box h3{margin:0 0 8px;font-size:19px}
+.mini{margin:6px 0 0;color:var(--muted);font-size:14px}
+.okc{color:var(--green);font-weight:800}
+.savestate{display:block;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.topbar{margin-bottom:16px}
+.topbar h2{margin:0;font-size:28px;line-height:1.2}
+.topbar p{margin:6px 0 0;color:var(--muted)}
+.task{display:none;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 8px 26px rgba(1,62,145,.06)}
+.task.active{display:block}
+.task-title{font-size:24px;margin:0 0 6px}
+.task-subtitle{margin:0 0 18px;color:var(--muted)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:18px}
+.head .task-subtitle{margin-bottom:0}
+.ill{width:130px;flex:0 0 130px;height:auto;margin:0}
+.sec{font-size:20px;margin:0 0 12px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.info{background:#f0f5fa;border:1px solid var(--line);border-radius:13px;padding:14px}
+.info h3{font-size:16px;color:var(--green);margin:0 0 6px}
+.info p{margin:0}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{padding:2px}
+.field label{display:block;font-weight:700;margin-bottom:6px}
+.field input,.field textarea{width:100%;padding:12px 13px;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:10px;min-height:48px}
+.field input:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(1,62,145,.15);outline:none}
+.field input.bad,.field textarea.bad{border-color:var(--red);background:#fdf0ee}
+.field small{display:block;color:var(--muted);margin-top:5px;font-size:14px}
+.wide{grid-column:1/-1}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{border:0;border-radius:11px;padding:12px 20px;cursor:pointer;font-weight:800;min-height:48px}
+.btn.primary{background:var(--green);color:#fff}
+.btn.secondary{background:#e2ebf4;color:var(--text)}
+.btn:hover{filter:brightness(1.1)}
+.result{margin-top:18px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--mint);border-radius:14px;padding:16px;min-height:70px}
+.result.error{border-left-color:var(--red);background:#fdf0ee}
+.result h3{margin:0 0 8px;font-size:20px}
+.result p{margin:6px 0}
+.result strong{color:var(--green)}
+.rflex{display:flex;gap:16px;align-items:center;justify-content:space-between}
+.rflex small{display:block;color:var(--muted)}
+.formula{font-family:ui-monospace,Consolas,monospace;color:#013E91;font-size:15px;word-break:break-word}
+.tw{overflow:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;min-width:460px}
+th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--soft);color:#013E91}
+svg{max-width:100%;height:auto}
+.note{color:var(--amber);font-size:14px;margin-top:8px}
+.gift{margin-top:18px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--mint);border-radius:14px;padding:16px}
+.gift:empty{display:none}
+.ghead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ghead h3{margin:0;font-size:20px}
+.ghead span{color:var(--muted);font-size:15px}
+.bar{height:12px;background:#e0e8f0;border-radius:99px;overflow:hidden;margin:10px 0 12px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#013E91,#1a66cc);border-radius:99px}
+.win{display:flex;gap:16px;align-items:center;background:#eef4fb;border:1px solid #c8daee;border-radius:14px;padding:12px 16px;margin:10px 0}
+.win svg{width:110px;height:88px;flex:none}
+.prize{font-size:22px;color:var(--green)}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px;margin-top:12px}
+.card{background:#f4f8fc;border:1px solid #d0dce8;border-radius:12px;padding:10px;text-align:center;font-size:14px}
+.card svg{width:90px;height:72px}
+.card.top{background:#eaf2fb;box-shadow:0 0 0 3px #013E91}
+.card.lock{background:#f1efe6;color:#8a8f87}
+.card.lock svg{filter:grayscale(1);opacity:.35}
+.report h3{font-size:19px;margin:24px 0 8px}
+.report ul,#hp ol{padding-left:22px}
+.kqlist li{margin-bottom:6px}
+.kqlist .none{color:var(--muted);font-style:italic;list-style:none;margin-left:-18px}
+.footer{grid-column:1/-1;color:var(--muted);font-size:13px;text-align:center}
+.mobile-toggle{display:none}
+@media(max-width:1180px){.main{grid-template-columns:minmax(0,1fr)}.aside{position:static}}
+@media(max-width:900px){
+ .app{display:block}.sidebar{position:fixed;z-index:20;left:-300px;transition:left .2s;height:100vh}.sidebar.open{left:0}.main{padding:16px}.mobile-toggle{display:inline-flex;align-items:center;justify-content:center;background:var(--side);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;margin-bottom:10px}.topbar h2{font-size:23px}.info-grid,.form-grid{grid-template-columns:1fr}.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:10}.overlay.show{display:block}
+}
+@media(max-width:560px){body{font-size:16px}.task{padding:16px}.ill{width:80px;flex-basis:80px}.win{flex-direction:column;text-align:center}.rflex{flex-direction:column;align-items:flex-start}}
+@media print{body{background:#fff}.sidebar,.topbar,.task,.mobile-toggle,.overlay,.aside,.actions,.footer{display:none!important}.main{display:block;padding:0}.task.report{display:block!important;border:0;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+<div class="brand">
+  <svg class="ill" style="width:84px;flex:none;margin:0 0 10px" viewBox="0 0 120 90" aria-hidden="true">
+    <path d="M60 22C46 14 28 14 12 20v50c16-6 34-6 48 2z" fill="#013E91" stroke="#1a66cc" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M60 22c14-8 32-8 48-2v50c-16-6-34-6-48 2z" fill="#0d2b5c" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M24 34c10-3 24-2 30 2M24 46c10-3 24-2 30 2M66 36c6-4 20-5 30-2M66 48c6-4 20-5 30-2" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M60 22v50" stroke="#1a66cc" stroke-width="3"/>
+    <path d="M92 8l2.5 6 6 2.5-6 2.5L92 25l-2.5-6-6-2.5 6-2.5z" fill="#fbbf24"/>
+  </svg>
+  <h1>TOÁN HỌC TRONG CUỘC SỐNG</h1>
+  <p>Sản phẩm số của em · Tuần lễ học tập suốt đời 2026 · THCS Lương Thế Vinh</p>
+</div>
+<nav class="menu" aria-label="Danh mục công cụ">
+<button class="active" data-t="t1"><span class="num">01</span>Đọc sách &amp; đổi quà</button>
+<button data-t="t2"><span class="num">02</span>Tiền điện gia đình</button>
+<button data-t="t3"><span class="num">03</span>Tiền nước &amp; lượng nước</button>
+<button data-t="t4"><span class="num">04</span>Rác nhựa &amp; mức giảm</button>
+<button data-t="t5"><span class="num">05</span>Thời gian dùng điện thoại</button>
+<button data-t="rp"><span class="num">BC</span>Báo cáo của em</button>
+<div class="sep"></div>
+<button data-t="hp"><span class="num">?</span>Trợ giúp</button>
+</nav>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="main">
+<div class="content">
+<div class="topbar"><div>
+<button class="mobile-toggle" id="mobileToggle" type="button" aria-expanded="false">☰ Danh mục</button>
+<h2 id="pageTitle">Kế hoạch đọc sách và đổi quà</h2>
+<p id="pageDesc">Số trong ô nhập là số ví dụ; hãy thay bằng số liệu thật của em.</p>
+</div></div>
+
+<section class="task active" id="t1">
+<div class="head"><div><h2 class="task-title">Kế hoạch đọc sách và đổi quà</h2>
+<p class="task-subtitle">Biết cần bao nhiêu ngày để đọc xong một cuốn sách, đọc nhanh hay chậm, và đổi số sách đã đọc ra quà.</p>
+</div><svg class="ill" viewBox="0 0 120 90" aria-hidden="true"><path d="M60 22C46 14 28 14 12 20v50c16-6 34-6 48 2z" fill="#013E91" stroke="#1a66cc" stroke-width="3" stroke-linejoin="round"/><path d="M60 22c14-8 32-8 48-2v50c-16-6-34-6-48 2z" fill="#0d2b5c" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/><path d="M24 34c10-3 24-2 30 2M24 46c10-3 24-2 30 2M66 36c6-4 20-5 30-2M66 48c6-4 20-5 30-2" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M60 22v50" stroke="#1a66cc" stroke-width="3"/><path d="M92 8l2.5 6 6 2.5-6 2.5L92 25l-2.5-6-6-2.5 6-2.5z" fill="#fbbf24"/></svg></div>
+<div class="info-grid"><div class="info"><h3>Ý nghĩa đời sống</h3><p>Giúp em lập kế hoạch đọc sách theo số trang và thời gian thực tế.</p></div><div class="info"><h3>Công thức áp dụng</h3><p class="formula">Số ngày = số trang ÷ trang mỗi ngày (làm tròn lên); Tốc độ = số trang ÷ số phút</p></div></div>
+<h3 class="sec">Nhập dữ liệu của em</h3>
+<div class="form-grid">
+<div class="field"><label for="a1">Tổng số trang</label><input id="a1" type="number" min="1" step="1" value="300"></div>
+<div class="field"><label for="a2">Số trang đọc mỗi ngày</label><input id="a2" type="number" min="1" step="1" value="20"></div>
+<div class="field"><label for="a3">Số phút em đã đọc để hết cuốn sách (hoặc một phần)</label><input id="a3" type="number" min="1" step="1" value="900"></div>
+<div class="field"><label for="a5">Số cuốn sách em đã đọc xong</label><input id="a5" type="number" min="0" step="1" value="4"><small>Đổi ra quà theo bảng mốc bên dưới.</small></div>
+<div class="field"><label for="a4">Số trang đã đọc trong khoảng phút đó</label><input id="a4" type="number" min="1" step="1" value="300"></div>
+</div>
+<div class="actions"><button class="btn primary" data-c="1">Tính</button><button class="btn secondary" data-r="t1">Đặt lại</button></div>
+<div class="result" id="r1" aria-live="polite"></div>
+<div class="gift" id="gift"></div>
+</section>
+
+<section class="task" id="t2">
+<div class="head"><div><h2 class="task-title">Tiền điện gia đình</h2>
+<p class="task-subtitle">Đọc chỉ số công tơ đầu và cuối kỳ, tính tiền theo 6 bậc giá sinh hoạt.</p>
+</div><svg class="ill" viewBox="0 0 120 90" aria-hidden="true"><g stroke="#fbbf24" stroke-width="4" stroke-linecap="round"><path d="M60 4v7M24 38h-7M103 38h-7M34 12l5 5M86 12l-5 5"/></g><circle cx="60" cy="38" r="22" fill="#fbbf24"/><path d="M52 34l8 10 8-10" stroke="#78350f" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M50 58h20v8a6 6 0 0 1-6 6h-8a6 6 0 0 1-6-6z" fill="#94a3b8"/><path d="M52 78h16" stroke="#64748b" stroke-width="4" stroke-linecap="round"/></svg></div>
+<div class="info-grid"><div class="info"><h3>Ý nghĩa đời sống</h3><p>Giúp gia đình hiểu vì sao dùng càng nhiều điện thì mỗi kWh càng đắt và tiết kiệm ở bậc cao có lợi nhất.</p></div><div class="info"><h3>Công thức áp dụng</h3><p class="formula">kWh = chỉ số mới − chỉ số cũ; Tiền = Σ(kWh mỗi bậc × đơn giá); cộng VAT</p></div></div>
+<h3 class="sec">Nhập dữ liệu của em</h3>
+<div class="form-grid">
+<div class="field"><label for="b1">Chỉ số công tơ cũ (kWh)</label><input id="b1" type="number" min="0" value="1250"></div>
+<div class="field"><label for="b2">Chỉ số công tơ mới (kWh)</label><input id="b2" type="number" min="0" value="1480"></div>
+<div class="field"><label for="b3">Số người trong gia đình</label><input id="b3" type="number" min="1" step="1" value="4"></div>
+<div class="field"><label for="b4">VAT (%)</label><input id="b4" type="number" min="0" max="20" step="0.5" value="8"><small>Hãy kiểm tra mức VAT đang áp dụng.</small></div>
+</div>
+<div class="actions"><button class="btn primary" data-c="2">Tính tiền điện</button><button class="btn secondary" data-r="t2">Đặt lại</button></div>
+<div class="result" id="r2" aria-live="polite"></div>
+<p class="note">Bảng giá 6 bậc (1.984 – 3.460 đ/kWh) là giá điện sinh hoạt của gia đình. Trường học tính theo biểu giá khác nên không dùng công cụ này cho hóa đơn của trường. Em cần đối chiếu biểu giá với hóa đơn hoặc nguồn chính thức của EVN trước khi dùng số liệu để kết luận.</p>
+</section>
+
+<section class="task" id="t3">
+<div class="head"><div><h2 class="task-title">Tiền nước và lượng nước mỗi người dùng</h2>
+<p class="task-subtitle">Từ chỉ số đồng hồ nước, tính tiền nước và số lít mỗi người dùng trong một ngày.</p>
+</div><svg class="ill" viewBox="0 0 120 90" aria-hidden="true"><path d="M60 8C60 8 34 40 34 56a26 26 0 0 0 52 0C86 40 60 8 60 8z" fill="#38bdf8"/><path d="M47 56a13 13 0 0 0 9 12" stroke="#e0f2fe" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M14 82c8-5 16-5 24 0s16 5 24 0 16-5 24 0 16 5 24 0" stroke="#0ea5e9" stroke-width="3" fill="none" stroke-linecap="round"/></svg></div>
+<div class="info-grid"><div class="info"><h3>Ý nghĩa đời sống</h3><p>Giúp em biết nhà mình dùng bao nhiêu lít nước mỗi người mỗi ngày để điều chỉnh thói quen.</p></div><div class="info"><h3>Công thức áp dụng</h3><p class="formula">m³ = chỉ số mới − chỉ số cũ; Tiền = m³ × đơn giá × (1 + phụ thu%); Lít/người/ngày = m³ × 1000 ÷ (số người × số ngày)</p></div></div>
+<h3 class="sec">Nhập dữ liệu của em</h3>
+<div class="form-grid">
+<div class="field"><label for="c1">Chỉ số nước cũ (m³)</label><input id="c1" type="number" min="0" value="120"></div>
+<div class="field"><label for="c2">Chỉ số nước mới (m³)</label><input id="c2" type="number" min="0" value="132"></div>
+<div class="field"><label for="c3">Đơn giá (đồng/m³)</label><input id="c3" type="number" min="0" step="100" value="10000"><small>Số ví dụ. Em hãy thay bằng giá ghi trên hóa đơn nhà em.</small></div>
+<div class="field"><label for="c4">Phụ thu, phí, thuế trên hóa đơn (%)</label><input id="c4" type="number" min="0" max="50" step="0.5" value="0"><small>Nhập theo hóa đơn, để 0 nếu chưa biết.</small></div>
+<div class="field"><label for="c5">Số người dùng nước</label><input id="c5" type="number" min="1" step="1" value="4"></div>
+<div class="field"><label for="c6">Số ngày của kỳ ghi</label><input id="c6" type="number" min="1" step="1" value="30"></div>
+</div>
+<div class="actions"><button class="btn primary" data-c="3">Tính tiền nước</button><button class="btn secondary" data-r="t3">Đặt lại</button></div>
+<div class="result" id="r3" aria-live="polite"></div>
+</section>
+
+<section class="task" id="t4">
+<div class="head"><div><h2 class="task-title">Rác nhựa mỗi ngày và mức giảm</h2>
+<p class="task-subtitle">Em tự đếm số vật dụng và tự cân khối lượng một chiếc. Công cụ tính tổng và phần trăm giảm.</p>
+</div><svg class="ill" viewBox="0 0 120 90" aria-hidden="true"><rect x="52" y="8" width="16" height="10" rx="2" fill="#013E91"/><path d="M52 18h16v8c9 4 15 10 15 20v28a6 6 0 0 1-6 6H43a6 6 0 0 1-6-6V46c0-10 6-16 15-20z" fill="#0d2b5c" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/><rect x="39" y="44" width="42" height="22" fill="#013E91"/><path d="M52 58c0-7 8-9 14-5M68 55l-3-5-5 3M68 60c0 6-7 8-12 5M52 62l3 5 5-3" stroke="#38bdf8" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div class="info-grid"><div class="info"><h3>Ý nghĩa đời sống</h3><p>Biến số vật dụng nhựa bỏ đi thành khối lượng để thấy rõ việc giảm rác có hiệu quả bao nhiêu.</p></div><div class="info"><h3>Công thức áp dụng</h3><p class="formula">Khối lượng = Σ(số lượng × khối lượng 1 chiếc); Giảm % = khối lượng giảm ÷ khối lượng ban đầu × 100</p></div></div>
+<h3 class="sec">Nhập dữ liệu của em</h3>
+<div class="form-grid">
+<div class="field"><label for="d1">Chai nhựa mỗi ngày</label><input id="d1" type="number" min="0" step="1" value="5"></div>
+<div class="field"><label for="d2">Khối lượng 1 chai (g)</label><input id="d2" type="number" min="0" step="0.1" value="18"><small>Số ví dụ. Hãy tự cân bằng cân điện tử.</small></div>
+<div class="field"><label for="d3">Túi nilon mỗi ngày</label><input id="d3" type="number" min="0" step="1" value="8"></div>
+<div class="field"><label for="d4">Khối lượng 1 túi (g)</label><input id="d4" type="number" min="0" step="0.1" value="5"></div>
+<div class="field"><label for="d5">Hộp xốp mỗi ngày</label><input id="d5" type="number" min="0" step="1" value="3"></div>
+<div class="field"><label for="d6">Khối lượng 1 hộp (g)</label><input id="d6" type="number" min="0" step="0.1" value="12"></div>
+<div class="field"><label for="d7">Số chai đã tái chế/giảm</label><input id="d7" type="number" min="0" step="1" value="3"></div>
+<div class="field"><label for="d8">Số túi đã tái chế/giảm</label><input id="d8" type="number" min="0" step="1" value="4"></div>
+<div class="field"><label for="d9">Số hộp đã tái chế/giảm</label><input id="d9" type="number" min="0" step="1" value="2"></div>
+</div>
+<div class="actions"><button class="btn primary" data-c="4">Tính lượng rác</button><button class="btn secondary" data-r="t4">Đặt lại</button></div>
+<div class="result" id="r4" aria-live="polite"></div>
+</section>
+
+<section class="task" id="t5">
+<div class="head"><div><h2 class="task-title">Khảo sát thời gian dùng điện thoại</h2>
+<p class="task-subtitle">Nhập số phút dùng điện thoại mỗi ngày của các bạn trong lớp (không ghi tên). Công cụ lập bảng thống kê và biểu đồ.</p>
+</div><svg class="ill" viewBox="0 0 120 90" aria-hidden="true"><rect x="36" y="6" width="48" height="78" rx="9" fill="#0b1220" stroke="#cbd5e1" stroke-width="3"/><rect x="43" y="16" width="34" height="52" rx="3" fill="#13251f"/><rect x="48" y="50" width="6" height="14" fill="#013E91"/><rect x="57" y="38" width="6" height="26" fill="#38bdf8"/><rect x="66" y="26" width="6" height="38" fill="#fbbf24"/><circle cx="60" cy="76" r="3" fill="#cbd5e1"/></svg></div>
+<div class="info-grid"><div class="info"><h3>Ý nghĩa đời sống</h3><p>Giúp lớp nhìn thấy mức dùng điện thoại điển hình và nhận ra thói quen cần điều chỉnh.</p></div><div class="info"><h3>Công thức áp dụng</h3><p class="formula">Trung bình = tổng ÷ số bạn; Trung vị = giá trị ở giữa khi xếp tăng dần; Mốt = giá trị xuất hiện nhiều nhất</p></div></div>
+<h3 class="sec">Nhập dữ liệu của em</h3>
+<div class="form-grid">
+<div class="field wide"><label for="e1">Số phút mỗi bạn (cách nhau bằng dấu phẩy, dấu cách hoặc xuống dòng)</label><textarea id="e1" rows="4">60, 90, 120, 120, 150, 45, 180, 120, 75, 200</textarea><small>Số ví dụ. Hãy thay bằng kết quả khảo sát thật của lớp, mỗi số từ 0 đến 1440. Trong ô này, nhấn Enter để xuống dòng, nhấn Ctrl + Enter để tính.</small></div>
+<div class="field"><label for="e2">Mức thời gian em đặt ra là hợp lý (phút/ngày)</label><input id="e2" type="number" min="0" step="5" value="120"></div>
+</div>
+<div class="actions"><button class="btn primary" data-c="5">Phân tích</button><button class="btn secondary" data-r="t5">Đặt lại</button></div>
+<div class="result" id="r5" aria-live="polite"></div>
+</section>
+
+<section class="task report" id="rp">
+<div class="head"><div><h2 class="task-title">Báo cáo của em</h2>
+<p class="task-subtitle">Sản phẩm số học tập cá nhân.</p>
+</div><svg class="ill" viewBox="0 0 120 90" aria-hidden="true"><rect x="28" y="12" width="64" height="72" rx="7" fill="#0d2b5c" stroke="#38bdf8" stroke-width="3"/><rect x="46" y="6" width="28" height="14" rx="4" fill="#013E91"/><path d="M40 38h40M40 50h40M40 62h24" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/><circle cx="86" cy="72" r="14" fill="#013E91"/><path d="M79 72l5 5 9-10" stroke="#ffffff" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div>
+<h3>Thông tin sản phẩm</h3>
+<p><b>Chủ đề Tuần lễ 2026:</b> “Thực học, thực hành, làm chủ công nghệ số và trí tuệ nhân tạo để xây dựng xã hội học tập, đẩy mạnh học tập suốt đời”.</p>
+<p><b>Sản phẩm:</b> Trang web “Toán học trong cuộc sống” (chạy ngoại tuyến, 5 công cụ tính toán).</p>
+<p><b>Lớp:</b> <span>Lớp 7/12</span>, <b>Trường:</b> THCS Lương Thế Vinh</p>
+<p><b>Nhóm học sinh thực hiện:</b> <span>Lê Văn Minh</span></p>
+<p><b>Giáo viên hướng dẫn:</b> <span>Cô Võ Thị Đông Trúc</span></p>
+
+<h3>Em đã dùng AI như thế nào</h3>
+<div class="tw"><table>
+<tr><th>Câu hỏi</th><th>Trả lời</th></tr>
+<tr><td>AI đã giúp em ở khâu nào?</td><td>AI gợi ý cách tổ chức trang và viết mã HTML, CSS, JavaScript.</td></tr>
+<tr><td>Em đã kiểm tra thông tin như thế nào?</td><td>Tính tay lại các ví dụ, thử nhiều bộ số, thử nhập sai để xem công cụ báo lỗi, đối chiếu biểu giá với hóa đơn.</td></tr>
+<tr><td>Phần nào do em tự làm?</td><td>Chọn chủ đề, đo và thu thập số liệu thật, nhập số liệu, đọc kết quả và viết nhận xét.</td></tr>
+<tr><td>Phần nào là AI hỗ trợ?</td><td>Viết khung giao diện và các hàm tính.</td></tr>
+</table></div>
+
+<h3>Kết quả em đã tính trên trang này</h3>
+<ul id="kq-list" class="kqlist"></ul>
+<p class="mini">Danh sách này tự cập nhật mỗi khi em bấm nút Tính ở các công cụ 01–05.</p>
+
+<h3>Đề xuất của em</h3>
+<ul><li>Tắt đèn, quạt khi ra khỏi phòng; dùng nước vừa đủ; mang bình nước và túi vải cá nhân để giảm chai nhựa, túi nilon.</li><li>Đặt mức dùng điện thoại hợp lý mỗi ngày và dành thời gian đó cho đọc sách.</li></ul>
+
+<h3>Lưu ý</h3>
+<ul>
+<li>Các số trong ô nhập là số ví dụ. Số liệu dùng để nộp bài phải là số em tự đo, tự đếm, tự khảo sát.</li>
+<li>Dữ liệu khảo sát không ghi tên bạn nào. Số liệu chỉ được lưu trong trình duyệt trên chính máy này, không gửi đi đâu; em có thể xóa bằng nút “Xóa dữ liệu đã lưu” ở cột bên phải.</li>
+<li>Biểu giá điện, giá nước và VAT cần đối chiếu với hóa đơn hoặc nguồn chính thức.</li>
+</ul>
+<div class="actions"><button class="btn primary" onclick="window.print()">In hoặc lưu PDF</button></div>
+</div>
+</section>
+
+<section class="task" id="hp">
+<h2 class="task-title">Trợ giúp</h2>
+<p class="task-subtitle">Cách dùng trang này.</p>
+<ol><li>Chọn công cụ ở menu bên trái.</li><li>Thay số ví dụ bằng số liệu thật em tự đo, đếm, khảo sát.</li><li>Bấm nút Tính (hoặc nhấn Enter khi đang ở ô nhập một dòng) để xem kết quả và biểu đồ.</li><li>Xong thì mở “Báo cáo của em”, bấm “In hoặc lưu PDF” rồi chọn Lưu thành PDF.</li><li>Trang chạy ngoại tuyến. Số liệu em nhập được <b>tự động lưu trong trình duyệt này</b>; lần sau mở lại trang, các ô sẽ tự điền đúng số cũ và cả công cụ em đang xem cũng được mở lại. Bấm “Xóa dữ liệu đã lưu” ở cột bên phải nếu muốn quay về số ví dụ.</li></ol>
+</section>
+</div>
+
+<aside class="aside">
+<div class="box">
+  <b>Trạng thái:</b> <span class="okc">Sẵn sàng offline</span>
+  <p class="mini">Tính toán ngay trong trình duyệt, không gửi dữ liệu đi đâu.</p>
+  <span class="savestate"><b>Lưu trên máy:</b> <span id="saveState">chưa có dữ liệu</span></span>
+  <p class="mini" id="saveInfo">Nhập số vào các công cụ, trang sẽ tự lưu lại trên máy này.</p>
+  <button class="btn secondary" id="clearLS" type="button" style="width:100%;margin-top:8px">Xóa dữ liệu đã lưu</button>
+</div>
+<div class="box" id="chartcard"><h3>Biểu đồ</h3><div id="chart"></div></div>
+<button class="btn primary" id="dl" type="button" style="width:100%">Tải báo cáo (PDF)</button>
+</aside>
+<div class="footer">Trang chạy ngoại tuyến; số liệu em nhập được lưu trong trình duyệt của em và không gửi đi đâu.</div>
+</main>
+</div>
+
+<script>
+"use strict";
+
+/* ==================== TIỆN ÍCH CHUNG ==================== */
+const $ = id => document.getElementById(id);
+const fmt = (v, d = 2) => new Intl.NumberFormat("vi-VN", { maximumFractionDigits: d }).format(v);
+const vnd = v => fmt(Math.round(v), 0) + " đ";
+
+/* ==================== KIỂM TRA NHẬP VÀO ==================== */
+/* Đọc một ô số và trả về {ok:true, value} hoặc {ok:false, msg}.
+   opts = { int: true|false, min: number, max: number } */
+function readNum(id, label, opts) {
+  opts = opts || {};
+  const el = $(id);
+  if (!el) return { ok: false, msg: "Không tìm thấy ô “" + label + "”." };
+
+  const raw = el.value.trim();
+  el.classList.remove("bad");
+  if (raw === "") {
+    el.classList.add("bad");
+    return { ok: false, msg: "Ô “" + label + "” không được để trống." };
+  }
+
+  const v = Number(raw);
+  if (!Number.isFinite(v)) {
+    el.classList.add("bad");
+    return { ok: false, msg: "Ô “" + label + "” phải là một số hợp lệ (hiện tại: \"" + raw + "\")." };
+  }
+  if (opts.int && !Number.isInteger(v)) {
+    el.classList.add("bad");
+    return { ok: false, msg: "Ô “" + label + "” phải là số nguyên (hiện tại: " + raw + ")." };
+  }
+  if (opts.min !== undefined && v < opts.min) {
+    el.classList.add("bad");
+    return { ok: false, msg: "Ô “" + label + "” phải lớn hơn hoặc bằng " + opts.min + " (hiện tại: " + raw + ")." };
+  }
+  if (opts.max !== undefined && v > opts.max) {
+    el.classList.add("bad");
+    return { ok: false, msg: "Ô “" + label + "” phải nhỏ hơn hoặc bằng " + opts.max + " (hiện tại: " + raw + ")." };
+  }
+  return { ok: true, value: v };
+}
+
+/* Đọc nhiều ô cùng lúc. specs = [[id, label, opts], ...]
+   Trả về {values:{...}} hoặc {error: "..."} (dừng ở ô sai đầu tiên). */
+function readFields(specs) {
+  const values = {};
+  for (let i = 0; i < specs.length; i++) {
+    const s = specs[i];
+    const r = readNum(s[0], s[1], s[2]);
+    if (!r.ok) return { error: r.msg };
+    values[s[0]] = r.value;
+  }
+  return { values: values };
+}
+
+/* ==================== BIỂU ĐỒ & KHUNG KẾT QUẢ ==================== */
+const charts = {};
+let cur = "t1";
+
+function setChart(n, html) {
+  charts["t" + n] = html || '<p class="mini">Chưa có biểu đồ cho lần tính này.</p>';
+}
+function showChart() {
+  $("chartcard").hidden = !/^t\d$/.test(cur);
+  $("chart").innerHTML = charts[cur] || '<p class="mini">Bấm nút tính để xem biểu đồ.</p>';
+}
+function out(n, html, err) {
+  const b = $("r" + n);
+  b.className = "result" + (err ? " error" : "");
+  b.innerHTML = html;
+  showChart();
+}
+function bad(n, msg) {
+  setChart(n, null);
+  setSummary(n, null);
+  out(n, '<h3>Dữ liệu chưa hợp lệ</h3><p>' + msg + '</p>', 1);
+}
+
+/* ==================== TÓM TẮT CHO BÁO CÁO ==================== */
+const summary = {};
+function setSummary(n, text) { summary[n] = text || null; renderSummary(); }
+function renderSummary() {
+  const el = $("kq-list");
+  if (!el) return;
+  el.innerHTML = [1, 2, 3, 4, 5].map(i =>
+    summary[i]
+      ? "<li>" + summary[i] + "</li>"
+      : '<li class="none">Công cụ 0' + i + ': chưa có kết quả — hãy bấm nút Tính ở công cụ đó.</li>'
+  ).join("");
+}
+
+/* ==================== VẼ BIỂU ĐỒ CỘT ==================== */
+function bars(items, unit, color) {
+  const max = Math.max(...items.map(i => i[1]), 1);
+  const w = 64;
+  let s = '<div class="chartbox"><svg viewBox="0 0 ' + (items.length * w + 20) + ' 190" role="img" aria-label="Biểu đồ cột">';
+  items.forEach((it, i) => {
+    const h = Math.max(it[1] / max * 120, 0);
+    const x = 10 + i * w;
+    s += '<rect x="' + (x + 8) + '" y="' + (150 - h) + '" width="' + (w - 16) + '" height="' + h + '" fill="' + (color || "#013E91") + '" rx="3"/>'
+      + '<text x="' + (x + w / 2) + '" y="' + (144 - h) + '" text-anchor="middle" font-size="11" fill="#23312c">' + fmt(it[1]) + '</text>'
+      + '<text x="' + (x + w / 2) + '" y="168" text-anchor="middle" font-size="11" fill="#5d6b64">' + it[0] + '</text>';
+  });
+  return s + '</svg><p class="note">Đơn vị: ' + unit + '</p></div>';
+}
+
+/* ==================== HÌNH MINH HOẠ PHẦN QUÀ ==================== */
+const PR = b => '<svg viewBox="0 0 100 80" aria-hidden="true">' + b + '</svg>';
+const R = [
+  [1, "Nhãn dán sách", PR('<circle cx="50" cy="40" r="30" fill="#fbbf24"/><circle cx="50" cy="40" r="24" fill="none" stroke="#fff7d6" stroke-width="2" stroke-dasharray="3 3"/><path d="M50 22l5.5 11.5 12.5 1.6-9.2 8.7 2.3 12.4L50 50.2 38.9 56.2l2.3-12.4-9.2-8.7 12.5-1.6z" fill="#b45309"/>')],
+  [3, "Bookmark (kẹp sách)", PR('<path d="M38 8h24v62l-12-12-12 12z" fill="#ef4444"/><path d="M50 20l3 6 6.5.8-4.8 4.5 1.2 6.4L50 34.5l-5.9 3.2 1.2-6.4-4.8-4.5 6.5-.8z" fill="#fde68a"/><path d="M50 8V3" stroke="#cbd5e1" stroke-width="3"/>')],
+  [5, "Sổ tay", PR('<rect x="24" y="8" width="54" height="66" rx="6" fill="#38bdf8"/><rect x="34" y="8" width="44" height="66" rx="4" fill="#0ea5e9"/><g fill="#e0f2fe"><circle cx="29" cy="20" r="3"/><circle cx="29" cy="34" r="3"/><circle cx="29" cy="48" r="3"/><circle cx="29" cy="62" r="3"/></g><rect x="44" y="20" width="26" height="16" rx="3" fill="#e0f2fe"/><path d="M46 50h22M46 58h16" stroke="#e0f2fe" stroke-width="3" stroke-linecap="round"/>')],
+  [8, "Bút và vở đẹp", PR('<rect x="16" y="10" width="46" height="60" rx="5" fill="#013E91"/><path d="M24 28h30M24 38h30M24 48h20" stroke="#d1fae5" stroke-width="3" stroke-linecap="round"/><g transform="rotate(30 74 40)"><rect x="68" y="8" width="12" height="52" rx="2" fill="#fbbf24"/><rect x="68" y="8" width="12" height="9" fill="#ef4444"/><path d="M68 60h12l-6 12z" fill="#fde68a"/><path d="M71.5 66.5h5l-2.5 5z" fill="#334155"/></g>')],
+  [12, "Một cuốn sách và giấy khen", PR('<rect x="6" y="56" width="56" height="12" rx="2" fill="#7c3aed"/><rect x="10" y="44" width="52" height="12" rx="2" fill="#1e3a5f"/><rect x="12" y="32" width="48" height="12" rx="2" fill="#013E91"/><rect x="56" y="8" width="38" height="30" rx="3" fill="#fff7d6" stroke="#fbbf24" stroke-width="2"/><path d="M62 18h26M62 25h18" stroke="#b45309" stroke-width="2" stroke-linecap="round"/><circle cx="84" cy="35" r="7" fill="#ef4444"/><path d="M80 40l-3 9 7-3 7 3-3-9" fill="#ef4444"/>')]
+];
+const GIFT = c => '<svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true" style="vertical-align:middle"><rect x="6" y="18" width="28" height="18" rx="3" fill="' + c + '"/><rect x="4" y="12" width="32" height="8" rx="3" fill="' + c + '" opacity=".85"/><rect x="18" y="12" width="4" height="24" fill="#fde68a"/><path d="M20 12c-6-8-14-4-9 0zM20 12c6-8 14-4 9 0z" fill="none" stroke="#fde68a" stroke-width="3" stroke-linejoin="round"/></svg>';
+const POP = '<svg viewBox="0 0 100 80" aria-hidden="true"><path d="M12 72L32 26l30 30z" fill="#f59e0b"/><path d="M20 56l16-14M26 66l22-20" stroke="#fff3c4" stroke-width="3"/><circle cx="62" cy="22" r="3.5" fill="#ef4444"/><circle cx="78" cy="38" r="3" fill="#3b82f6"/><rect x="70" y="14" width="7" height="7" rx="1" fill="#22c55e" transform="rotate(20 73 17)"/><path d="M48 12q6 6 0 12M84 56q-8 2-8 10" stroke="#a855f7" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M58 40l8-4M52 28l2-8" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/></svg>';
+const donut = p => '<svg viewBox="0 0 100 100" width="120" height="120" role="img" aria-label="Tiến độ tới phần quà cuối"><circle cx="50" cy="50" r="38" fill="none" stroke="#e5dfcb" stroke-width="14"/><circle cx="50" cy="50" r="38" fill="none" stroke="#013E91" stroke-width="14" stroke-linecap="round" stroke-dasharray="' + (p * 2.3876) + ' 238.76" transform="rotate(-90 50 50)"/><text x="50" y="56" text-anchor="middle" font-size="18" font-weight="700" fill="#23312c">' + fmt(p, 0) + '%</text></svg>';
+
+function rewards(bk, perBook) {
+  const max = R[R.length - 1][0];
+  const top = [...R].reverse().find(r => r[0] <= bk);
+  const next = R.find(r => r[0] > bk);
+  const win = top
+    ? '<div class="win">' + POP + '<div><b>Chúc mừng! Em đã đọc ' + bk + ' cuốn và nhận được:</b><br><strong class="prize">' + top[1] + '</strong></div></div>'
+    : '<p>Em đã đọc <strong>' + bk + ' cuốn</strong>. Đọc xong 1 cuốn là nhận phần quà đầu tiên.</p>';
+  const nx = next
+    ? '<p>Còn <strong>' + (next[0] - bk) + ' cuốn</strong> nữa để nhận <strong>' + next[1] + '</strong>, khoảng <strong>' + ((next[0] - bk) * perBook) + ' ngày</strong> nếu mỗi cuốn mất ' + perBook + ' ngày như kế hoạch trên.</p>'
+    : '<p>Em đã đạt mốc cao nhất, chúc mừng em!</p>';
+  const cards = R.map(r => {
+    const e = r[0] <= bk;
+    return '<div class="card' + (e ? "" : " lock") + (r === top ? " top" : "") + '">' + r[2]
+      + '<b>' + r[1] + '</b><br><small>'
+      + (e ? "Đã nhận · " + r[0] + " cuốn" : "Cần " + r[0] + " cuốn (thiếu " + (r[0] - bk) + ")")
+      + '</small></div>';
+  }).join("");
+  return '<div class="ghead"><h3>' + GIFT("#013E91") + ' Đổi quà từ số sách đã đọc</h3>'
+    + '<span>Tiến trình đổi quà: ' + Math.min(bk, max) + '/' + max + ' cuốn</span></div>'
+    + '<div class="bar"><i style="width:' + Math.min(100, bk / max * 100) + '%"></i></div>'
+    + win + nx + '<div class="gal">' + cards + '</div>'
+    + '<p class="note">Các mốc và phần quà ở đây là ví dụ. Phần thưởng thật do lớp, thư viện hoặc nhà trường quy định.</p>';
+}
+
+/* ==================== 01. ĐỌC SÁCH ==================== */
+function calc1() {
+  const R1 = readFields([
+    ["a1", "Tổng số trang", { int: true, min: 1 }],
+    ["a2", "Số trang đọc mỗi ngày", { int: true, min: 1 }],
+    ["a3", "Số phút em đã đọc", { int: true, min: 1 }],
+    ["a4", "Số trang đã đọc trong khoảng phút đó", { int: true, min: 1 }],
+    ["a5", "Số cuốn sách em đã đọc xong", { int: true, min: 0 }]
+  ]);
+  if (R1.error) return bad(1, R1.error);
+
+  const p = R1.values.a1, d = R1.values.a2, m = R1.values.a3, r = R1.values.a4, bk = R1.values.a5;
+
+  if (r > p) {
+    $("a4").classList.add("bad");
+    return bad(1, "Số trang đã đọc (" + r + ") không được lớn hơn tổng số trang của cuốn sách (" + p + ").");
+  }
+
+  const days = p / d;
+  const daysUp = Math.ceil(days);
+  const speed = r / m;
+  const hours = p / speed / 60;
+  const max = R[R.length - 1][0];
+  const pct = Math.min(100, bk / max * 100);
+
+  setChart(1, bars([["Em", bk], ...R.map(x => ["Mốc " + x[0], x[0]])], "số cuốn sách"));
+
+  out(1, '<h3>Kết quả</h3>'
+    + '<div class="rflex"><div>'
+    + '<p>Cần khoảng <strong>' + fmt(days) + '</strong> ngày, tức <strong>' + daysUp + ' ngày</strong> khi làm tròn lên.</p>'
+    + '<p>Tốc độ đọc: <strong>' + fmt(speed) + ' trang/phút</strong>, khoảng <strong>' + fmt(speed * 60, 1) + ' trang/giờ</strong>.</p>'
+    + '<p>Với tốc độ này, cả cuốn sách mất khoảng <strong>' + fmt(hours, 1) + ' giờ</strong> đọc.</p>'
+    + '<p>Nếu mỗi ngày đọc thêm 5 trang thì chỉ còn <strong>' + Math.ceil(p / (d + 5)) + ' ngày</strong>.</p>'
+    + '<p class="formula">' + p + ' ÷ ' + d + ' = ' + fmt(days) + ' ; ' + r + ' ÷ ' + m + ' = ' + fmt(speed) + '</p>'
+    + '</div><div style="text-align:center">' + donut(pct) + '<small>Tiến độ tới quà cuối</small></div></div>');
+
+  $("gift").innerHTML = rewards(bk, daysUp);
+  setSummary(1, '<b>Công cụ 01 — Đọc sách:</b> ' + fmt(p, 0) + ' trang, đọc ' + fmt(d, 0)
+    + ' trang/ngày → cần ' + daysUp + ' ngày; tốc độ ' + fmt(speed) + ' trang/phút; đã đọc xong ' + bk + ' cuốn.');
+}
+
+/* ==================== 02. TIỀN ĐIỆN ==================== */
+const T = [[50, 1984], [50, 2050], [100, 2380], [100, 2998], [100, 3350], [Infinity, 3460]];
+
+function calc2() {
+  const R2 = readFields([
+    ["b1", "Chỉ số công tơ cũ (kWh)", { min: 0 }],
+    ["b2", "Chỉ số công tơ mới (kWh)", { min: 0 }],
+    ["b3", "Số người trong gia đình", { int: true, min: 1 }],
+    ["b4", "VAT (%)", { min: 0, max: 20 }]
+  ]);
+  if (R2.error) return bad(2, R2.error);
+
+  const o = R2.values.b1, n = R2.values.b2, k = R2.values.b3, vat = R2.values.b4;
+
+  if (n < o) {
+    $("b2").classList.add("bad");
+    return bad(2, "Chỉ số công tơ mới (" + n + ") phải lớn hơn hoặc bằng chỉ số cũ (" + o + ").");
+  }
+
+  const used = n - o;
+  let left = used, sum = 0;
+  const rows = [], chart = [];
+
+  T.forEach((t, i) => {
+    const u = Math.min(Math.max(left, 0), t[0]);
+    left -= u;
+    if (u > 0) {
+      const c = u * t[1];
+      sum += c;
+      rows.push('<tr><td>Bậc ' + (i + 1) + '</td><td>' + fmt(u) + '</td><td>' + vnd(t[1])
+        + '</td><td>' + vnd(c) + '</td><td>' + fmt(c / sum * 100, 1) + '%</td></tr>');
+      chart.push(["Bậc " + (i + 1), c / 1000]);
+    }
+  });
+
+  const v = Math.round(sum * vat / 100);
+  const tot = sum + v;
+  const perPerson = tot / k;
+
+  setChart(2, chart.length ? bars(chart, "nghìn đồng, theo từng bậc") : null);
+
+  out(2, '<h3>Kết quả</h3>'
+    + '<p>Điện đã dùng: <strong>' + fmt(used) + ' kWh</strong> trong kỳ.</p>'
+    + (used === 0 ? '<p class="note">Chỉ số mới bằng chỉ số cũ nên chưa dùng thêm điện.</p>' : '')
+    + '<div class="tw"><table><tr><th>Bậc</th><th>kWh</th><th>Đơn giá (chưa VAT)</th><th>Thành tiền (chưa VAT)</th><th>Tỉ lệ</th></tr>'
+    + (rows.join("") || '<tr><td colspan="5">Chưa dùng điện.</td></tr>')
+    + '</table></div>'
+    + '<p>Trước VAT: <strong>' + vnd(sum) + '</strong>; VAT ' + fmt(vat) + '%: <strong>' + vnd(v) + '</strong>.</p>'
+    + '<p>Tổng cộng: <strong>' + vnd(tot) + '</strong>, bình quân <strong>' + vnd(perPerson) + '</strong> mỗi người.</p>');
+
+  setSummary(2, '<b>Công cụ 02 — Tiền điện:</b> dùng ' + fmt(used) + ' kWh, tổng tiền (gồm VAT '
+    + fmt(vat) + '%) là ' + vnd(tot) + ', bình quân ' + vnd(perPerson) + '/người.');
+}
+
+/* ==================== 03. TIỀN NƯỚC ==================== */
+function calc3() {
+  const R3 = readFields([
+    ["c1", "Chỉ số nước cũ (m³)", { min: 0 }],
+    ["c2", "Chỉ số nước mới (m³)", { min: 0 }],
+    ["c3", "Đơn giá (đồng/m³)", { min: 0 }],
+    ["c4", "Phụ thu, phí, thuế (%)", { min: 0, max: 50 }],
+    ["c5", "Số người dùng nước", { int: true, min: 1 }],
+    ["c6", "Số ngày của kỳ ghi", { int: true, min: 1 }]
+  ]);
+  if (R3.error) return bad(3, R3.error);
+
+  const o = R3.values.c1, n = R3.values.c2, pr = R3.values.c3;
+  const ph = R3.values.c4, k = R3.values.c5, d = R3.values.c6;
+
+  if (n < o) {
+    $("c2").classList.add("bad");
+    return bad(3, "Chỉ số nước mới (" + n + ") phải lớn hơn hoặc bằng chỉ số cũ (" + o + ").");
+  }
+
+  const m3 = n - o;
+  const base = m3 * pr;
+  const tot = base * (1 + ph / 100);
+  const lit = m3 * 1000 / (k * d);
+
+  const warn = lit > 150
+    ? '<p class="note">Mức ' + fmt(lit, 1) + ' lít/người/ngày cao hơn mức tham khảo khoảng 120 – 130 lít/người/ngày. Em thử kiểm tra lại đồng hồ hoặc tìm chỗ rò rỉ nước.</p>'
+    : '<p class="mini">Mức tham khảo thường dùng: khoảng 120 – 130 lít/người/ngày.</p>';
+
+  setChart(3, bars([["Cả nhà", tot / 1000], ["Mỗi người", tot / k / 1000]], "nghìn đồng"));
+
+  out(3, '<h3>Kết quả</h3>'
+    + '<p>Nước đã dùng: <strong>' + fmt(m3) + ' m³</strong> (' + fmt(m3 * 1000, 0) + ' lít).</p>'
+    + '<p>Tiền nước: <strong>' + vnd(tot) + '</strong>, bình quân <strong>' + vnd(tot / k) + '</strong> mỗi người.</p>'
+    + '<p>Mỗi người dùng khoảng <strong>' + fmt(lit, 1) + ' lít/ngày</strong>.</p>'
+    + warn
+    + '<p class="formula">' + fmt(m3) + ' × ' + fmt(pr, 0) + ' × (1 + ' + fmt(ph) + '%) = ' + vnd(tot)
+    + ' ; ' + fmt(m3 * 1000, 0) + ' ÷ (' + k + ' × ' + d + ') = ' + fmt(lit, 1) + '</p>');
+
+  setSummary(3, '<b>Công cụ 03 — Tiền nước:</b> dùng ' + fmt(m3) + ' m³, tiền nước ' + vnd(tot)
+    + ', mỗi người khoảng ' + fmt(lit, 1) + ' lít/ngày.');
+}
+
+/* ==================== 04. RÁC NHỰA ==================== */
+function calc4() {
+  const R4 = readFields([
+    ["d1", "Chai nhựa mỗi ngày", { int: true, min: 0 }],
+    ["d2", "Khối lượng 1 chai (g)", { min: 0 }],
+    ["d3", "Túi nilon mỗi ngày", { int: true, min: 0 }],
+    ["d4", "Khối lượng 1 túi (g)", { min: 0 }],
+    ["d5", "Hộp xốp mỗi ngày", { int: true, min: 0 }],
+    ["d6", "Khối lượng 1 hộp (g)", { min: 0 }],
+    ["d7", "Số chai đã tái chế/giảm", { int: true, min: 0 }],
+    ["d8", "Số túi đã tái chế/giảm", { int: true, min: 0 }],
+    ["d9", "Số hộp đã tái chế/giảm", { int: true, min: 0 }]
+  ]);
+  if (R4.error) return bad(4, R4.error);
+
+  const c = [R4.values.d1, R4.values.d3, R4.values.d5];   // số lượng mỗi ngày
+  const g = [R4.values.d2, R4.values.d4, R4.values.d6];   // khối lượng 1 chiếc
+  const r = [R4.values.d7, R4.values.d8, R4.values.d9];   // số đã giảm
+
+  const names = ["chai", "túi", "hộp"];
+  const ids = ["d7", "d8", "d9"];
+  for (let i = 0; i < 3; i++) {
+    if (r[i] > c[i]) {
+      $(ids[i]).classList.add("bad");
+      return bad(4, "Số " + names[i] + " đã giảm (" + r[i] + ") không được lớn hơn số " + names[i] + " phát sinh mỗi ngày (" + c[i] + ").");
+    }
+  }
+
+  const m = c.map((x, i) => x * g[i]);
+  const rm = r.map((x, i) => x * g[i]);
+  const M = m[0] + m[1] + m[2];
+  const Rd = rm[0] + rm[1] + rm[2];
+  const pct = M ? Rd / M * 100 : 0;
+
+  setChart(4, bars([["Ban đầu", M], ["Đã giảm", Rd], ["Còn lại", M - Rd]], "gam rác nhựa mỗi ngày"));
+
+  out(4, '<h3>Kết quả</h3>'
+    + '<p>Rác nhựa mỗi ngày: <strong>' + fmt(M) + ' g</strong>; đã giảm: <strong>' + fmt(Rd)
+    + ' g</strong>; còn lại: <strong>' + fmt(M - Rd) + ' g</strong>.</p>'
+    + '<p>Tỉ lệ giảm: <strong>' + fmt(pct) + '%</strong>.</p>'
+    + '<p>Nếu giữ thói quen này, mỗi 30 ngày còn khoảng <strong>' + fmt((M - Rd) * 30 / 1000)
+    + ' kg</strong> rác nhựa thay vì ' + fmt(M * 30 / 1000) + ' kg.</p>'
+    + '<div class="tw"><table><tr><th>Loại</th><th>Số lượng/ngày</th><th>Khối lượng 1 chiếc</th><th>Gam mỗi ngày</th></tr>'
+    + '<tr><td>Chai nhựa</td><td>' + fmt(c[0], 0) + '</td><td>' + fmt(g[0]) + ' g</td><td>' + fmt(m[0]) + ' g</td></tr>'
+    + '<tr><td>Túi nilon</td><td>' + fmt(c[1], 0) + '</td><td>' + fmt(g[1]) + ' g</td><td>' + fmt(m[1]) + ' g</td></tr>'
+    + '<tr><td>Hộp xốp</td><td>' + fmt(c[2], 0) + '</td><td>' + fmt(g[2]) + ' g</td><td>' + fmt(m[2]) + ' g</td></tr>'
+    + '</table></div>');
+
+  setSummary(4, '<b>Công cụ 04 — Rác nhựa:</b> mỗi ngày ' + fmt(M) + ' g, đã giảm ' + fmt(Rd)
+    + ' g (' + fmt(pct) + '%), còn lại ' + fmt(M - Rd) + ' g/ngày.');
+}
+
+/* ==================== 05. THỜI GIAN DÙNG ĐIỆN THOẠI ==================== */
+function calc5() {
+  const limR = readNum("e2", "Mức thời gian hợp lý (phút/ngày)", { min: 0 });
+  if (!limR.ok) return bad(5, limR.msg);
+  const lim = limR.value;
+
+  const ta = $("e1");
+  ta.classList.remove("bad");
+  const raw = ta.value.split(/[\s,;]+/).filter(Boolean);
+  if (raw.length < 2) {
+    ta.classList.add("bad");
+    return bad(5, "Cần nhập ít nhất 2 số phút trong ô khảo sát (cách nhau bằng dấu phẩy, dấu cách hoặc xuống dòng).");
+  }
+
+  const v = [];
+  for (let i = 0; i < raw.length; i++) {
+    const s = raw[i];
+    const x = Number(s);
+    if (!Number.isFinite(x)) {
+      ta.classList.add("bad");
+      return bad(5, "Giá trị \"" + s + "\" không phải là số hợp lệ. Mỗi mục phải là một số phút từ 0 đến 1440.");
+    }
+    if (x < 0 || x > 1440) {
+      ta.classList.add("bad");
+      return bad(5, "Số phút phải trong khoảng 0 – 1440. Giá trị \"" + s + "\" không hợp lệ.");
+    }
+    v.push(x);
+  }
+
+  const s = [...v].sort((a, b) => a - b);
+  const n = s.length;
+  const mean = s.reduce((a, b) => a + b, 0) / n;
+  const med = n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2;
+  const sd = Math.sqrt(s.reduce((a, x) => a + (x - mean) ** 2, 0) / n);
+
+  const f = new Map();
+  s.forEach(x => f.set(x, (f.get(x) || 0) + 1));
+  const mf = Math.max(...f.values());
+  const modes = [...f].filter(e => e[1] === mf).map(e => e[0]);
+  const modeTxt = mf === 1
+    ? "không có (mỗi giá trị chỉ xuất hiện một lần)"
+    : modes.map(x => fmt(x)).join(", ") + " phút";
+
+  const over = v.filter(x => x > lim).length;
+
+  const step = 30;
+  const rawBins = Math.floor(s[n - 1] / step) + 1;
+  const nBins = Math.max(1, Math.min(rawBins, 12));
+  const bins = new Array(nBins).fill(0);
+  v.forEach(x => bins[Math.min(Math.floor(x / step), nBins - 1)]++);
+  const ch = bins.map((count, i) => {
+    const lo = i * step, hi = lo + step - 1;
+    const label = (i === nBins - 1 && rawBins > 12) ? "≥" + lo : lo + "–" + hi;
+    return [label, count];
+  });
+
+  setChart(5, bars(ch, "số bạn, theo khoảng phút/ngày"));
+
+  out(5, '<h3>Bảng thống kê (' + n + ' bạn)</h3>'
+    + '<div class="tw"><table><tr><th>Chỉ số</th><th>Giá trị</th></tr>'
+    + '<tr><td>Trung bình</td><td>' + fmt(mean) + ' phút/ngày (' + fmt(mean / 60, 1) + ' giờ)</td></tr>'
+    + '<tr><td>Trung vị</td><td>' + fmt(med) + ' phút</td></tr>'
+    + '<tr><td>Mốt</td><td>' + modeTxt + '</td></tr>'
+    + '<tr><td>Ít nhất – nhiều nhất</td><td>' + fmt(s[0]) + ' – ' + fmt(s[n - 1]) + ' phút</td></tr>'
+    + '<tr><td>Độ lệch chuẩn</td><td>' + fmt(sd) + ' phút</td></tr>'
+    + '<tr><td>Vượt mức ' + fmt(lim, 0) + ' phút</td><td>' + over + '/' + n + ' bạn (' + fmt(over / n * 100, 1) + '%)</td></tr>'
+    + '</table></div>'
+    + '<p>Trung bình ' + fmt(mean) + ' phút/ngày tương đương khoảng <strong>' + fmt(mean * 365 / 60 / 24, 1)
+    + ' ngày mỗi năm</strong>.</p>'
+    + '<p class="note">Nếu trung bình và trung vị chênh nhau nhiều (hoặc độ lệch chuẩn lớn), thường có vài bạn dùng rất nhiều hoặc rất ít so với phần còn lại.</p>');
+
+  setSummary(5, '<b>Công cụ 05 — Thời gian dùng điện thoại:</b> khảo sát ' + n + ' bạn, trung bình '
+    + fmt(mean) + ' phút/ngày, trung vị ' + fmt(med) + ' phút, mốt: ' + modeTxt
+    + '; ' + over + '/' + n + ' bạn vượt mức ' + fmt(lim, 0) + ' phút.');
+}
+
+/* ==================== GẮN SỰ KIỆN ==================== */
+const calcs = { 1: calc1, 2: calc2, 3: calc3, 4: calc4, 5: calc5 };
+
+document.querySelectorAll("[data-c]").forEach(b => {
+  b.addEventListener("click", () => calcs[b.dataset.c]());
+});
+
+document.querySelectorAll("[data-r]").forEach(b => {
+  b.addEventListener("click", () => {
+    const sec = $(b.dataset.r);
+    sec.querySelectorAll("input,textarea").forEach(i => {
+      i.value = i.defaultValue;
+      i.classList.remove("bad");
+    });
+    calcs[b.dataset.r.slice(1)]();
+    saveSoon();
+  });
+});
+
+/* ==================== LƯU TRỮ CỤC BỘ (localStorage) ==================== */
+const LS_KEY = "toan-ltv-2026-v1";
+
+/* Kiểm tra trình duyệt có cho dùng localStorage không (chế độ riêng tư có thể chặn). */
+const lsOk = (function () {
+  try {
+    const k = "__ls_test__";
+    localStorage.setItem(k, "1");
+    localStorage.removeItem(k);
+    return true;
+  } catch (e) { return false; }
+})();
+
+let savedAt = null;      // thời điểm lưu gần nhất (ms)
+let saveTimer = null;    // hẹn giờ gộp nhiều lần gõ phím thành một lần ghi
+
+/* Tất cả ô nhập của trang (mọi input và textarea có id). */
+function allFields() {
+  return document.querySelectorAll("input[id], textarea[id]");
+}
+
+/* Ghi toàn bộ giá trị ô nhập + tab đang mở vào localStorage. */
+function saveNow() {
+  if (!lsOk) return;
+  const fields = {};
+  allFields().forEach(el => { fields[el.id] = el.value; });
+  try {
+    savedAt = Date.now();
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      v: 1,
+      savedAt: savedAt,
+      tab: cur,
+      fields: fields
+    }));
+  } catch (e) {
+    // Hết dung lượng hoặc bị chặn giữa chừng
+    lsOk = false;
+    savedAt = null;
+  }
+  updateSavedLabel();
+}
+
+/* Ghi chậm 400ms để không lưu liên tục khi em đang gõ. */
+function saveSoon() {
+  if (!lsOk) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveNow, 400);
+}
+
+/* Đọc dữ liệu đã lưu và điền lại vào các ô. Trả về object đã lưu hoặc null. */
+function loadSaved() {
+  if (!lsOk) return null;
+  let obj = null;
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) obj = JSON.parse(raw);
+  } catch (e) { obj = null; }
+  if (!obj || typeof obj !== "object" || !obj.fields || typeof obj.fields !== "object") return null;
+
+  allFields().forEach(el => {
+    const v = obj.fields[el.id];
+    // Chỉ nhận chuỗi; gán bằng .value nên an toàn, không dựng HTML.
+    if (typeof v === "string") el.value = v;
+  });
+
+  savedAt = typeof obj.savedAt === "number" ? obj.savedAt : null;
+  return obj;
+}
+
+/* Xóa dữ liệu đã lưu và đưa mọi ô về số ví dụ ban đầu. */
+function clearSaved() {
+  try { localStorage.removeItem(LS_KEY); } catch (e) {}
+  savedAt = null;
+  allFields().forEach(el => {
+    el.value = el.defaultValue;
+    el.classList.remove("bad");
+  });
+  Object.values(calcs).forEach(f => f());
+  updateSavedLabel("cleared");
+}
+
+/* Cập nhật dòng trạng thái lưu ở cột bên phải. */
+function updateSavedLabel(mode) {
+  const st = $("saveState"), info = $("saveInfo");
+  if (!st || !info) return;
+  st.style.color = "";
+
+  if (!lsOk) {
+    st.textContent = "không khả dụng";
+    st.style.color = "var(--red)";
+    info.textContent = "Trình duyệt đang chặn lưu trữ (có thể do chế độ riêng tư). Trang vẫn tính bình thường nhưng sẽ không ghi nhớ số liệu.";
+    return;
+  }
+  if (mode === "cleared") {
+    st.textContent = "đã xóa";
+    info.textContent = "Đã xóa dữ liệu đã lưu. Các ô nhập trở về số ví dụ.";
+    return;
+  }
+  if (savedAt) {
+    const d = new Date(savedAt);
+    st.textContent = "đã lưu " + d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })
+      + " · " + d.toLocaleDateString("vi-VN");
+    info.textContent = "Số liệu của em được giữ trong trình duyệt này và tự điền lại khi mở trang.";
+  } else {
+    st.textContent = "chưa có dữ liệu";
+    info.textContent = "Nhập số vào các công cụ, trang sẽ tự lưu lại trên máy này.";
+  }
+}
+
+/* ==================== ĐIỀU HƯỚNG ==================== */
+const titles = {
+  t1: ["Kế hoạch đọc sách và đổi quà", "Tính ngày đọc, tốc độ đọc và đổi số sách đã đọc ra quà."],
+  t2: ["Tiền điện gia đình", "Từ chỉ số công tơ, tính tiền điện theo 6 bậc giá sinh hoạt."],
+  t3: ["Tiền nước và lượng nước mỗi người dùng", "Từ chỉ số đồng hồ nước, tính tiền và số lít mỗi người mỗi ngày."],
+  t4: ["Rác nhựa mỗi ngày và mức giảm", "Tự đếm, tự cân rồi tính phần trăm đã giảm."],
+  t5: ["Khảo sát thời gian dùng điện thoại", "Lập bảng thống kê và biểu đồ từ số liệu của lớp."],
+  rp: ["Báo cáo của em", "Thông tin sản phẩm, cách em dùng AI và đề xuất của em."],
+  hp: ["Trợ giúp", "Cách dùng trang này."]
+};
+
+const sb = $("sidebar"), ov = $("overlay"), mt = $("mobileToggle");
+
+function closeMenu() {
+  sb.classList.remove("open");
+  ov.classList.remove("show");
+  mt.setAttribute("aria-expanded", "false");
+}
+
+/* Mở một mục bất kỳ. doScroll = true khi người dùng bấm menu. */
+function activateTab(t, doScroll) {
+  const btn = document.querySelector('.menu button[data-t="' + t + '"]');
+  if (!btn || !titles[t]) return;
+  document.querySelectorAll(".menu button").forEach(e => e.classList.remove("active"));
+  document.querySelectorAll(".task").forEach(e => e.classList.remove("active"));
+  btn.classList.add("active");
+  $(t).classList.add("active");
+  cur = t;
+  showChart();
+  $("pageTitle").textContent = titles[cur][0];
+  $("pageDesc").textContent = titles[cur][1];
+  if (doScroll) window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll(".menu button").forEach(b => {
+  b.addEventListener("click", () => {
+    activateTab(b.dataset.t, true);
+    closeMenu();
+    saveSoon();          // nhớ luôn cả mục đang mở
+  });
+});
+
+mt.addEventListener("click", () => {
+  sb.classList.add("open");
+  ov.classList.add("show");
+  mt.setAttribute("aria-expanded", "true");
+});
+ov.addEventListener("click", closeMenu);
+
+$("dl").addEventListener("click", () => {
+  clearTimeout(saveTimer);
+  saveNow();
+  window.print();
+});
+
+$("clearLS").addEventListener("click", () => {
+  if (!window.confirm("Xóa toàn bộ số liệu đã lưu trên máy này và đưa các ô nhập về số ví dụ?")) return;
+  clearSaved();
+});
+
+/* ==================== BÀN PHÍM ==================== */
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeMenu();
+
+  const tag = e.target.tagName;
+  if (tag !== "INPUT" && tag !== "TEXTAREA") return;
+
+  const isArea = tag === "TEXTAREA";
+  const wanted = isArea ? (e.ctrlKey || e.metaKey) : (!e.shiftKey && !e.ctrlKey && !e.metaKey);
+  if (e.key !== "Enter" || !wanted) return;
+
+  const sec = e.target.closest(".task");
+  if (!sec) return;
+  const btn = sec.querySelector("[data-c]");
+  if (btn) { e.preventDefault(); btn.click(); }
+});
+
+/* ==================== TỰ ĐỘNG LƯU ==================== */
+document.addEventListener("input", e => {
+  const el = e.target;
+  if (el && el.id && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) saveSoon();
+});
+
+/* Ghi nốt phần đang chờ khi rời trang hoặc ẩn tab. */
+window.addEventListener("beforeunload", () => {
+  if (!lsOk) return;
+  clearTimeout(saveTimer);
+  saveNow();
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden" && lsOk) {
+    clearTimeout(saveTimer);
+    saveNow();
+  }
+});
+
+/* ==================== CHẠY LẦN ĐẦU ==================== */
+const restored = loadSaved();
+if (restored && typeof restored.tab === "string" && titles[restored.tab]) {
+  activateTab(restored.tab, false);
+}
+Object.values(calcs).forEach(f => f());
+updateSavedLabel();
+</script>
+</body>
+</html>
