@@ -107,6 +107,20 @@ svg{max-width:100%;height:auto}
 .kqlist .none{color:var(--muted);font-style:italic;list-style:none;margin-left:-18px}
 .footer{grid-column:1/-1;color:var(--muted);font-size:13px;text-align:center}
 .mobile-toggle{display:none}
+
+/* Bảng nhật ký sách */
+#bookTable input[type="text"],
+#bookTable input[type="date"],
+#bookTable input[type="number"]{
+  width:100%;min-height:40px;padding:8px 10px;font-size:15px;
+  background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:8px;
+}
+#bookTable input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(1,62,145,.15);outline:none}
+#bookTable input.bad{border-color:var(--red)!important;background:#fdf0ee!important}
+#bookTable td{padding:6px 8px;vertical-align:middle}
+#bookTable .del{background:transparent;border:0;color:var(--red);cursor:pointer;font-size:19px;font-weight:800;padding:6px 8px;border-radius:8px}
+#bookTable .del:hover{background:#fdecea}
+
 @media(max-width:1180px){.main{grid-template-columns:minmax(0,1fr)}.aside{position:static}}
 @media(max-width:900px){
  .app{display:block}.sidebar{position:fixed;z-index:20;left:-300px;transition:left .2s;height:100vh}.sidebar.open{left:0}.main{padding:16px}.mobile-toggle{display:inline-flex;align-items:center;justify-content:center;background:var(--side);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;margin-bottom:10px}.topbar h2{font-size:23px}.info-grid,.form-grid{grid-template-columns:1fr}.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:10}.overlay.show{display:block}
@@ -149,24 +163,58 @@ svg{max-width:100%;height:auto}
 <p id="pageDesc">Số trong ô nhập là số ví dụ; hãy thay bằng số liệu thật của em.</p>
 </div></div>
 
+<!-- ==================== 01. ĐỌC SÁCH ==================== -->
 <section class="task active" id="t1">
 <div class="head"><div><h2 class="task-title">Kế hoạch đọc sách và đổi quà</h2>
-<p class="task-subtitle">Biết cần bao nhiêu ngày để đọc xong một cuốn sách, đọc nhanh hay chậm, và đổi số sách đã đọc ra quà.</p>
+<p class="task-subtitle">Ghi nhật ký từng cuốn sách em đã đọc xong (tên, tác giả, ngày bắt đầu, ngày kết thúc, số trang). Công cụ tự kiểm tra tính hợp lý và đổi ra quà.</p>
 </div><svg class="ill" viewBox="0 0 120 90" aria-hidden="true"><path d="M60 22C46 14 28 14 12 20v50c16-6 34-6 48 2z" fill="#013E91" stroke="#1a66cc" stroke-width="3" stroke-linejoin="round"/><path d="M60 22c14-8 32-8 48-2v50c-16-6-34-6-48 2z" fill="#0d2b5c" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/><path d="M24 34c10-3 24-2 30 2M24 46c10-3 24-2 30 2M66 36c6-4 20-5 30-2M66 48c6-4 20-5 30-2" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M60 22v50" stroke="#1a66cc" stroke-width="3"/><path d="M92 8l2.5 6 6 2.5-6 2.5L92 25l-2.5-6-6-2.5 6-2.5z" fill="#fbbf24"/></svg></div>
-<div class="info-grid"><div class="info"><h3>Ý nghĩa đời sống</h3><p>Giúp em lập kế hoạch đọc sách theo số trang và thời gian thực tế.</p></div><div class="info"><h3>Công thức áp dụng</h3><p class="formula">Số ngày = số trang ÷ trang mỗi ngày (làm tròn lên); Tốc độ = số trang ÷ số phút</p></div></div>
-<h3 class="sec">Nhập dữ liệu của em</h3>
-<div class="form-grid">
-<div class="field"><label for="a1">Tổng số trang</label><input id="a1" type="number" min="1" step="1" value="300"></div>
-<div class="field"><label for="a2">Số trang đọc mỗi ngày</label><input id="a2" type="number" min="1" step="1" value="20"></div>
-<div class="field"><label for="a3">Số phút em đã đọc để hết cuốn sách (hoặc một phần)</label><input id="a3" type="number" min="1" step="1" value="900"></div>
-<div class="field"><label for="a5">Số cuốn sách em đã đọc xong</label><input id="a5" type="number" min="0" step="1" value="4"><small>Đổi ra quà theo bảng mốc bên dưới.</small></div>
-<div class="field"><label for="a4">Số trang đã đọc trong khoảng phút đó</label><input id="a4" type="number" min="1" step="1" value="300"></div>
+<div class="info-grid">
+  <div class="info"><h3>Ý nghĩa đời sống</h3><p>Giúp em lập kế hoạch đọc sách, đo tốc độ đọc thật của mình và có bằng chứng rõ ràng cho từng cuốn đã đọc xong.</p></div>
+  <div class="info"><h3>Công thức áp dụng</h3><p class="formula">Số ngày = ngày kết thúc − ngày bắt đầu + 1; Tốc độ = số trang ÷ số ngày; Tốc độ đo = số trang ÷ số phút</p></div>
 </div>
+
+<h3 class="sec">Tốc độ đọc của em (để tham khảo)</h3>
+<div class="form-grid">
+  <div class="field"><label for="a1">Tổng số trang 1 cuốn</label><input id="a1" type="number" min="1" step="1" value="300"></div>
+  <div class="field"><label for="a2">Số trang đọc mỗi ngày</label><input id="a2" type="number" min="1" step="1" value="20"></div>
+  <div class="field"><label for="a3">Số phút em đã đọc (để đo tốc độ)</label><input id="a3" type="number" min="1" step="1" value="900"></div>
+  <div class="field"><label for="a4">Số trang đã đọc trong khoảng phút đó</label><input id="a4" type="number" min="1" step="1" value="300"></div>
+</div>
+
+<h3 class="sec" style="margin-top:22px">Nhật ký sách em đã đọc xong</h3>
+<div class="info" style="margin-bottom:12px">
+  <p>Mỗi cuốn là một dòng. Phải có đủ <b>tên sách, tác giả, ngày bắt đầu, ngày kết thúc, số trang</b>. Cuốn nào chưa có ngày kết thúc hoặc để trống cả dòng thì <b>chưa tính</b> là đã đọc xong.</p>
+</div>
+<div class="tw">
+  <table id="bookTable">
+    <thead><tr>
+      <th style="width:32px">#</th>
+      <th>Tên sách</th>
+      <th>Tác giả</th>
+      <th style="width:150px">Bắt đầu</th>
+      <th style="width:150px">Kết thúc</th>
+      <th style="width:90px">Số trang</th>
+      <th style="width:40px"></th>
+    </tr></thead>
+    <tbody id="bookBody"></tbody>
+  </table>
+</div>
+<div class="actions">
+  <button class="btn secondary" id="addBook" type="button">+ Thêm một cuốn</button>
+</div>
+<div class="field wide" style="margin-top:14px">
+  <label style="display:flex;gap:10px;align-items:flex-start;font-weight:600">
+    <input type="checkbox" id="a6" style="width:auto;min-height:auto;margin-top:4px">
+    <span>Em cam kết danh sách trên là <b>sách thật em đã đọc xong</b>, có thể kể lại nội dung nếu cô hỏi.</span>
+  </label>
+</div>
+
 <div class="actions"><button class="btn primary" data-c="1">Tính</button><button class="btn secondary" data-r="t1">Đặt lại</button></div>
 <div class="result" id="r1" aria-live="polite"></div>
 <div class="gift" id="gift"></div>
 </section>
 
+<!-- ==================== 02. TIỀN ĐIỆN ==================== -->
 <section class="task" id="t2">
 <div class="head"><div><h2 class="task-title">Tiền điện gia đình</h2>
 <p class="task-subtitle">Đọc chỉ số công tơ đầu và cuối kỳ, tính tiền theo 6 bậc giá sinh hoạt.</p>
@@ -184,6 +232,7 @@ svg{max-width:100%;height:auto}
 <p class="note">Bảng giá 6 bậc (1.984 – 3.460 đ/kWh) là giá điện sinh hoạt của gia đình. Trường học tính theo biểu giá khác nên không dùng công cụ này cho hóa đơn của trường. Em cần đối chiếu biểu giá với hóa đơn hoặc nguồn chính thức của EVN trước khi dùng số liệu để kết luận.</p>
 </section>
 
+<!-- ==================== 03. TIỀN NƯỚC ==================== -->
 <section class="task" id="t3">
 <div class="head"><div><h2 class="task-title">Tiền nước và lượng nước mỗi người dùng</h2>
 <p class="task-subtitle">Từ chỉ số đồng hồ nước, tính tiền nước và số lít mỗi người dùng trong một ngày.</p>
@@ -202,6 +251,7 @@ svg{max-width:100%;height:auto}
 <div class="result" id="r3" aria-live="polite"></div>
 </section>
 
+<!-- ==================== 04. RÁC NHỰA ==================== -->
 <section class="task" id="t4">
 <div class="head"><div><h2 class="task-title">Rác nhựa mỗi ngày và mức giảm</h2>
 <p class="task-subtitle">Em tự đếm số vật dụng và tự cân khối lượng một chiếc. Công cụ tính tổng và phần trăm giảm.</p>
@@ -223,6 +273,7 @@ svg{max-width:100%;height:auto}
 <div class="result" id="r4" aria-live="polite"></div>
 </section>
 
+<!-- ==================== 05. ĐIỆN THOẠI ==================== -->
 <section class="task" id="t5">
 <div class="head"><div><h2 class="task-title">Khảo sát thời gian dùng điện thoại</h2>
 <p class="task-subtitle">Nhập số phút dùng điện thoại mỗi ngày của các bạn trong lớp (không ghi tên). Công cụ lập bảng thống kê và biểu đồ.</p>
@@ -237,6 +288,7 @@ svg{max-width:100%;height:auto}
 <div class="result" id="r5" aria-live="polite"></div>
 </section>
 
+<!-- ==================== BÁO CÁO ==================== -->
 <section class="task report" id="rp">
 <div class="head"><div><h2 class="task-title">Báo cáo của em</h2>
 <p class="task-subtitle">Sản phẩm số học tập cá nhân.</p>
@@ -267,7 +319,8 @@ svg{max-width:100%;height:auto}
 
 <h3>Lưu ý</h3>
 <ul>
-<li>Các số trong ô nhập là số ví dụ. Số liệu dùng để nộp bài phải là số em tự đo, tự đếm, tự khảo sát.</li>
+<li>Số sách không khai bằng một con số, mà ghi thành <b>nhật ký từng cuốn</b>: tên sách, tác giả, ngày bắt đầu, ngày kết thúc, số trang. Công cụ tự kiểm tra ngày tháng, đọc song song và tốc độ đọc có hợp lý không.</li>
+<li>Số liệu dùng để nộp bài phải là số em tự đo, tự đếm, tự khảo sát. Các ô nhập sẵn chỉ là ví dụ.</li>
 <li>Dữ liệu khảo sát không ghi tên bạn nào. Số liệu chỉ được lưu trong trình duyệt trên chính máy này, không gửi đi đâu; em có thể xóa bằng nút “Xóa dữ liệu đã lưu” ở cột bên phải.</li>
 <li>Biểu giá điện, giá nước và VAT cần đối chiếu với hóa đơn hoặc nguồn chính thức.</li>
 </ul>
@@ -275,10 +328,18 @@ svg{max-width:100%;height:auto}
 </div>
 </section>
 
+<!-- ==================== TRỢ GIÚP ==================== -->
 <section class="task" id="hp">
 <h2 class="task-title">Trợ giúp</h2>
 <p class="task-subtitle">Cách dùng trang này.</p>
-<ol><li>Chọn công cụ ở menu bên trái.</li><li>Thay số ví dụ bằng số liệu thật em tự đo, đếm, khảo sát.</li><li>Bấm nút Tính (hoặc nhấn Enter khi đang ở ô nhập một dòng) để xem kết quả và biểu đồ.</li><li>Xong thì mở “Báo cáo của em”, bấm “In hoặc lưu PDF” rồi chọn Lưu thành PDF.</li><li>Trang chạy ngoại tuyến. Số liệu em nhập được <b>tự động lưu trong trình duyệt này</b>; lần sau mở lại trang, các ô sẽ tự điền đúng số cũ và cả công cụ em đang xem cũng được mở lại. Bấm “Xóa dữ liệu đã lưu” ở cột bên phải nếu muốn quay về số ví dụ.</li></ol>
+<ol>
+<li>Chọn công cụ ở menu bên trái.</li>
+<li>Thay số ví dụ bằng số liệu thật em tự đo, đếm, khảo sát.</li>
+<li>Bấm nút Tính (hoặc nhấn Enter khi đang ở ô nhập một dòng) để xem kết quả và biểu đồ.</li>
+<li>Riêng công cụ 01: ghi nhật ký từng cuốn sách. Công cụ sẽ tự kiểm tra và cảnh báo nếu ngày tháng, tốc độ đọc có gì bất thường.</li>
+<li>Xong thì mở “Báo cáo của em”, bấm “In hoặc lưu PDF” rồi chọn Lưu thành PDF.</li>
+<li>Trang chạy ngoại tuyến. Số liệu em nhập được <b>tự động lưu trong trình duyệt này</b>; lần sau mở lại trang, các ô sẽ tự điền đúng số cũ và cả công cụ em đang xem cũng được mở lại. Bấm “Xóa dữ liệu đã lưu” ở cột bên phải nếu muốn quay về số ví dụ.</li>
+</ol>
 </section>
 </div>
 
@@ -305,9 +366,78 @@ const $ = id => document.getElementById(id);
 const fmt = (v, d = 2) => new Intl.NumberFormat("vi-VN", { maximumFractionDigits: d }).format(v);
 const vnd = v => fmt(Math.round(v), 0) + " đ";
 
+/* ==================== NHẬT KÝ SÁCH ==================== */
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => (
+    {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]
+  ));
+}
+
+function defaultBooks(){
+  return [
+    { title: "Tôi thấy hoa vàng trên cỏ xanh", author: "Nguyễn Nhật Ánh",
+      start: "2025-09-01", end: "2025-09-10", pages: "250" },
+    { title: "Dế Mèn phiêu lưu ký", author: "Tô Hoài",
+      start: "2025-09-15", end: "2025-09-22", pages: "180" },
+    { title: "Cho tôi xin một vé đi tuổi thơ", author: "Nguyễn Nhật Ánh",
+      start: "2025-10-01", end: "2025-10-08", pages: "200" }
+  ];
+}
+
+let books = defaultBooks();
+
+function renderBooks(){
+  const tb = $("bookBody");
+  if (!tb) return;
+  if (!books.length) {
+    tb.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--muted);font-style:italic;padding:14px">Chưa có cuốn nào. Bấm “+ Thêm một cuốn” để bắt đầu ghi nhật ký.</td></tr>';
+    return;
+  }
+  tb.innerHTML = books.map((b, i) =>
+    '<tr data-i="' + i + '">'
+    + '<td>' + (i + 1) + '</td>'
+    + '<td><input type="text" data-f="title" placeholder="VD: Tôi thấy hoa vàng trên cỏ xanh" value="' + esc(b.title) + '"></td>'
+    + '<td><input type="text" data-f="author" placeholder="VD: Nguyễn Nhật Ánh" value="' + esc(b.author) + '"></td>'
+    + '<td><input type="date" data-f="start" value="' + esc(b.start) + '"></td>'
+    + '<td><input type="date" data-f="end" value="' + esc(b.end) + '"></td>'
+    + '<td><input type="number" min="1" step="1" data-f="pages" value="' + esc(b.pages) + '"></td>'
+    + '<td><button class="del" type="button" data-del="' + i + '" aria-label="Xóa dòng ' + (i + 1) + '">✕</button></td>'
+    + '</tr>'
+  ).join("");
+}
+
+function addBook(){
+  books.push({ title: "", author: "", start: "", end: "", pages: "" });
+  renderBooks();
+  saveSoon();
+}
+
+/* Gắn sự kiện 1 lần duy nhất — dùng event delegation vì bảng được vẽ lại */
+function wireBookTable(){
+  const tb = $("bookBody"), add = $("addBook");
+  if (!tb || !add) return;
+
+  tb.addEventListener("input", e => {
+    const tr = e.target.closest("tr");
+    if (!tr) return;
+    const i = Number(tr.dataset.i), f = e.target.dataset.f;
+    if (!f || !books[i]) return;
+    books[i][f] = e.target.value;
+    saveSoon();
+  });
+
+  tb.addEventListener("click", e => {
+    const btn = e.target.closest("[data-del]");
+    if (!btn) return;
+    books.splice(Number(btn.dataset.del), 1);
+    renderBooks();
+    saveSoon();
+  });
+
+  add.addEventListener("click", addBook);
+}
+
 /* ==================== KIỂM TRA NHẬP VÀO ==================== */
-/* Đọc một ô số và trả về {ok:true, value} hoặc {ok:false, msg}.
-   opts = { int: true|false, min: number, max: number } */
 function readNum(id, label, opts) {
   opts = opts || {};
   const el = $(id);
@@ -340,8 +470,6 @@ function readNum(id, label, opts) {
   return { ok: true, value: v };
 }
 
-/* Đọc nhiều ô cùng lúc. specs = [[id, label, opts], ...]
-   Trả về {values:{...}} hoặc {error: "..."} (dừng ở ô sai đầu tiên). */
 function readFields(specs) {
   const values = {};
   for (let i = 0; i < specs.length; i++) {
@@ -373,6 +501,7 @@ function out(n, html, err) {
 function bad(n, msg) {
   setChart(n, null);
   setSummary(n, null);
+  if (n === 1) { const g = $("gift"); if (g) g.innerHTML = ""; }
   out(n, '<h3>Dữ liệu chưa hợp lệ</h3><p>' + msg + '</p>', 1);
 }
 
@@ -444,42 +573,138 @@ function rewards(bk, perBook) {
 /* ==================== 01. ĐỌC SÁCH ==================== */
 function calc1() {
   const R1 = readFields([
-    ["a1", "Tổng số trang", { int: true, min: 1 }],
+    ["a1", "Tổng số trang 1 cuốn", { int: true, min: 1 }],
     ["a2", "Số trang đọc mỗi ngày", { int: true, min: 1 }],
     ["a3", "Số phút em đã đọc", { int: true, min: 1 }],
-    ["a4", "Số trang đã đọc trong khoảng phút đó", { int: true, min: 1 }],
-    ["a5", "Số cuốn sách em đã đọc xong", { int: true, min: 0 }]
+    ["a4", "Số trang đã đọc trong khoảng phút đó", { int: true, min: 1 }]
   ]);
   if (R1.error) return bad(1, R1.error);
 
-  const p = R1.values.a1, d = R1.values.a2, m = R1.values.a3, r = R1.values.a4, bk = R1.values.a5;
-
+  const p = R1.values.a1, d = R1.values.a2, m = R1.values.a3, r = R1.values.a4;
   if (r > p) {
     $("a4").classList.add("bad");
-    return bad(1, "Số trang đã đọc (" + r + ") không được lớn hơn tổng số trang của cuốn sách (" + p + ").");
+    return bad(1, "Số trang đã đọc (" + r + ") không được lớn hơn tổng số trang 1 cuốn (" + p + ").");
   }
 
-  const days = p / d;
-  const daysUp = Math.ceil(days);
-  const speed = r / m;
-  const hours = p / speed / 60;
+  /* ---------- Kiểm tra từng cuốn ---------- */
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const valid = [], errors = [];
+
+  books.forEach((b, i) => {
+    const row = i + 1;
+    const hasAny = b.title || b.author || b.start || b.end || b.pages;
+    if (!hasAny) return;
+
+    if (!b.title)  return errors.push("Dòng " + row + ": chưa có tên sách.");
+    if (!b.author) return errors.push("Dòng " + row + ": chưa có tác giả.");
+    if (!b.start)  return errors.push("Dòng " + row + ": chưa có ngày bắt đầu.");
+    if (!b.end)    return errors.push("Dòng " + row + ": chưa có ngày kết thúc — sách chưa đọc xong thì chưa tính.");
+
+    const sd = new Date(b.start + "T00:00:00");
+    const ed = new Date(b.end   + "T00:00:00");
+    if (isNaN(sd) || isNaN(ed)) return errors.push("Dòng " + row + ": ngày không hợp lệ.");
+    if (ed < sd) return errors.push("Dòng " + row + ": ngày kết thúc (" + b.end + ") trước ngày bắt đầu (" + b.start + ").");
+    if (ed > today) return errors.push("Dòng " + row + ": ngày kết thúc ở tương lai — sách chưa đọc xong.");
+
+    const pages = Number(b.pages);
+    if (!Number.isFinite(pages) || pages < 1) return errors.push("Dòng " + row + ": số trang phải từ 1 trở lên.");
+
+    const days = Math.round((ed - sd) / 86400000) + 1;
+    const speed = pages / days;
+    valid.push({ row, title: b.title, author: b.author, sd, ed, days, pages, speed });
+  });
+
+  if (errors.length) return bad(1, errors.join(" "));
+  if (!valid.length) return bad(1, "Em chưa nhập cuốn sách nào. Hãy thêm ít nhất một cuốn có đủ tên sách, tác giả, ngày bắt đầu, ngày kết thúc và số trang.");
+
+  const bk = valid.length;
+  const totalPages = valid.reduce((a, b) => a + b.pages, 0);
+  const avgPages   = totalPages / bk;
+  const avgSpeed   = valid.reduce((a, b) => a + b.speed, 0) / bk;
+  const fastest    = valid.reduce((a, b) => b.speed > a.speed ? b : a);
+
+  /* ---------- Đọc song song bao nhiêu cuốn cùng lúc? ---------- */
+  const events = [];
+  valid.forEach(b => {
+    events.push({ t: b.sd.getTime(), delta: +1 });
+    events.push({ t: b.ed.getTime() + 86400000, delta: -1 });
+  });
+  events.sort((a, b) => a.t - b.t || b.delta - a.delta);
+  let curP = 0, mp = 0;
+  events.forEach(e => { curP += e.delta; if (curP > mp) mp = curP; });
+
+  /* ---------- Cảnh báo ---------- */
+  const warns = [];
+  if (mp > 2) {
+    warns.push("Có lúc em đọc song song <b>" + mp + " cuốn</b> cùng lúc. Đọc song song thì bình thường, nhưng quá nhiều cuốn một lúc thì khó nhớ nội dung — em kiểm tra lại ngày tháng.");
+  }
+  const tooFast = valid.filter(b => b.speed > 150);
+  if (tooFast.length) {
+    warns.push("<b>" + tooFast.length + " cuốn</b> có tốc độ trên <b>150 trang/ngày</b> — ví dụ “" + esc(tooFast[0].title) + "”: " + fmt(tooFast[0].speed, 0) + " trang/ngày. Tốc độ này rất nhanh, em thử kiểm tra lại.");
+  }
+  const tooSlow = valid.filter(b => b.speed < 2);
+  if (tooSlow.length) {
+    warns.push("<b>" + tooSlow.length + " cuốn</b> có tốc độ dưới <b>2 trang/ngày</b>. Đọc vậy thì rất chậm, có thể em quên ghi ngày.");
+  }
+  if (bk > 60) {
+    warns.push("Em đọc <b>" + bk + " cuốn</b>. Nếu rải đều trong ~270 ngày của năm học thì mỗi ngày phải xong <b>" + fmt(bk / 270, 2) + " cuốn</b>. Con số này khó tin — em kiểm tra lại danh sách.");
+  }
+  const pledged = $("a6").checked;
+
+  /* ---------- Bảng chi tiết ---------- */
+  const rowsHtml = valid.map(b =>
+    '<tr>'
+    + '<td>' + b.row + '</td>'
+    + '<td>' + esc(b.title) + '</td>'
+    + '<td>' + esc(b.author) + '</td>'
+    + '<td>' + b.sd.toLocaleDateString("vi-VN") + '</td>'
+    + '<td>' + b.ed.toLocaleDateString("vi-VN") + '</td>'
+    + '<td>' + fmt(b.days, 0) + '</td>'
+    + '<td>' + fmt(b.pages, 0) + '</td>'
+    + '<td>' + fmt(b.speed, 1) + '</td>'
+    + '</tr>'
+  ).join("");
+
+  /* ---------- Biểu đồ & kết quả ---------- */
+  setChart(1, bars([["Em", bk], ...R.map(x => ["Mốc " + x[0], x[0]])], "số cuốn sách"));
+
+  const days = p / d, daysUp = Math.ceil(days);
+  const speed = r / m, hours = p / speed / 60;
   const max = R[R.length - 1][0];
   const pct = Math.min(100, bk / max * 100);
 
-  setChart(1, bars([["Em", bk], ...R.map(x => ["Mốc " + x[0], x[0]])], "số cuốn sách"));
+  out(1, '<h3>Kết quả — ' + bk + ' cuốn hợp lệ</h3>'
+    + '<p>Tổng số trang: <strong>' + fmt(totalPages, 0) + ' trang</strong>; trung bình <strong>'
+    + fmt(avgPages, 0) + ' trang/cuốn</strong>; tốc độ trung bình <strong>'
+    + fmt(avgSpeed, 1) + ' trang/ngày</strong>.</p>'
+    + '<p>Cuốn đọc nhanh nhất: “' + esc(fastest.title) + '” — <strong>'
+    + fmt(fastest.speed, 1) + ' trang/ngày</strong> trong ' + fmt(fastest.days, 0) + ' ngày.</p>'
+    + '<p class="formula">Tốc độ đọc đo trực tiếp: ' + r + ' ÷ ' + m + ' = ' + fmt(speed)
+    + ' trang/phút = ' + fmt(speed * 60, 1) + ' trang/giờ.</p>'
+    + '<p class="mini">Kế hoạch tham khảo: ' + p + ' trang, đọc ' + d + ' trang/ngày → khoảng '
+    + fmt(days) + ' ngày (làm tròn lên ' + daysUp + ' ngày), tức khoảng ' + fmt(hours, 1) + ' giờ đọc.</p>'
+    + (warns.length
+        ? '<div class="result error" style="margin-top:10px"><h3>⚠ Điểm cần kiểm tra lại</h3><ul>'
+          + warns.map(w => '<li>' + w + '</li>').join('') + '</ul></div>'
+        : '')
+    + '<div class="tw" style="margin-top:14px"><table>'
+    + '<tr><th>#</th><th>Tên sách</th><th>Tác giả</th><th>Bắt đầu</th><th>Kết thúc</th><th>Số ngày</th><th>Số trang</th><th>Trang/ngày</th></tr>'
+    + rowsHtml
+    + '</table></div>'
+    + '<p class="mini" style="margin-top:10px">Đối chiếu tốc độ từng cuốn với tốc độ đọc thật của em ở trên. Nếu lệch quá nhiều thì em nên kiểm tra lại.</p>'
+    + '<div style="text-align:center;margin-top:14px">' + donut(pct) + '<small>Tiến độ tới quà cuối</small></div>');
 
-  out(1, '<h3>Kết quả</h3>'
-    + '<div class="rflex"><div>'
-    + '<p>Cần khoảng <strong>' + fmt(days) + '</strong> ngày, tức <strong>' + daysUp + ' ngày</strong> khi làm tròn lên.</p>'
-    + '<p>Tốc độ đọc: <strong>' + fmt(speed) + ' trang/phút</strong>, khoảng <strong>' + fmt(speed * 60, 1) + ' trang/giờ</strong>.</p>'
-    + '<p>Với tốc độ này, cả cuốn sách mất khoảng <strong>' + fmt(hours, 1) + ' giờ</strong> đọc.</p>'
-    + '<p>Nếu mỗi ngày đọc thêm 5 trang thì chỉ còn <strong>' + Math.ceil(p / (d + 5)) + ' ngày</strong>.</p>'
-    + '<p class="formula">' + p + ' ÷ ' + d + ' = ' + fmt(days) + ' ; ' + r + ' ÷ ' + m + ' = ' + fmt(speed) + '</p>'
-    + '</div><div style="text-align:center">' + donut(pct) + '<small>Tiến độ tới quà cuối</small></div></div>');
+  /* ---------- Quà ---------- */
+  if (!pledged) {
+    $("gift").innerHTML = '<div class="ghead"><h3>' + GIFT("#8a5a00") + ' Đổi quà từ số sách đã đọc</h3><span>Chưa mở</span></div>'
+      + '<p>Em cần tick ô <b>“Em cam kết danh sách trên là sách thật”</b> trước khi xem phần quà.</p>';
+  } else {
+    $("gift").innerHTML = rewards(bk, daysUp);
+  }
 
-  $("gift").innerHTML = rewards(bk, daysUp);
-  setSummary(1, '<b>Công cụ 01 — Đọc sách:</b> ' + fmt(p, 0) + ' trang, đọc ' + fmt(d, 0)
-    + ' trang/ngày → cần ' + daysUp + ' ngày; tốc độ ' + fmt(speed) + ' trang/phút; đã đọc xong ' + bk + ' cuốn.');
+  setSummary(1, '<b>Công cụ 01 — Đọc sách:</b> ' + bk + ' cuốn hợp lệ, tổng '
+    + fmt(totalPages, 0) + ' trang, trung bình ' + fmt(avgSpeed, 1) + ' trang/ngày; tốc độ đọc đo được '
+    + fmt(speed) + ' trang/phút' + (pledged ? ' (đã cam kết trung thực)' : ' (chưa tick cam kết)') + '.');
 }
 
 /* ==================== 02. TIỀN ĐIỆN ==================== */
@@ -594,9 +819,9 @@ function calc4() {
   ]);
   if (R4.error) return bad(4, R4.error);
 
-  const c = [R4.values.d1, R4.values.d3, R4.values.d5];   // số lượng mỗi ngày
-  const g = [R4.values.d2, R4.values.d4, R4.values.d6];   // khối lượng 1 chiếc
-  const r = [R4.values.d7, R4.values.d8, R4.values.d9];   // số đã giảm
+  const c = [R4.values.d1, R4.values.d3, R4.values.d5];
+  const g = [R4.values.d2, R4.values.d4, R4.values.d6];
+  const r = [R4.values.d7, R4.values.d8, R4.values.d9];
 
   const names = ["chai", "túi", "hộp"];
   const ids = ["d7", "d8", "d9"];
@@ -707,7 +932,7 @@ function calc5() {
     + '; ' + over + '/' + n + ' bạn vượt mức ' + fmt(lim, 0) + ' phút.');
 }
 
-/* ==================== GẮN SỰ KIỆN ==================== */
+/* ==================== GẮN SỰ KIỆN TÍNH / ĐẶT LẠI ==================== */
 const calcs = { 1: calc1, 2: calc2, 3: calc3, 4: calc4, 5: calc5 };
 
 document.querySelectorAll("[data-c]").forEach(b => {
@@ -718,18 +943,23 @@ document.querySelectorAll("[data-r]").forEach(b => {
   b.addEventListener("click", () => {
     const sec = $(b.dataset.r);
     sec.querySelectorAll("input,textarea").forEach(i => {
-      i.value = i.defaultValue;
+      if (i.closest("#bookBody")) return;  // bỏ qua ô trong bảng sách
+      if (i.type === "checkbox") i.checked = i.defaultChecked;
+      else i.value = i.defaultValue;
       i.classList.remove("bad");
     });
+    if (b.dataset.r === "t1") {
+      books = defaultBooks();
+      renderBooks();
+    }
     calcs[b.dataset.r.slice(1)]();
     saveSoon();
   });
 });
 
 /* ==================== LƯU TRỮ CỤC BỘ (localStorage) ==================== */
-const LS_KEY = "toan-ltv-2026-v1";
+const LS_KEY = "toan-ltv-2026-v2";
 
-/* Kiểm tra trình duyệt có cho dùng localStorage không (chế độ riêng tư có thể chặn). */
 const lsOk = (function () {
   try {
     const k = "__ls_test__";
@@ -739,43 +969,42 @@ const lsOk = (function () {
   } catch (e) { return false; }
 })();
 
-let savedAt = null;      // thời điểm lưu gần nhất (ms)
-let saveTimer = null;    // hẹn giờ gộp nhiều lần gõ phím thành một lần ghi
+let savedAt = null;
+let saveTimer = null;
 
-/* Tất cả ô nhập của trang (mọi input và textarea có id). */
+/* Chỉ lấy các ô có id, KHÔNG lấy ô trong bảng sách (bảng lưu riêng qua mảng books) */
 function allFields() {
   return document.querySelectorAll("input[id], textarea[id]");
 }
 
-/* Ghi toàn bộ giá trị ô nhập + tab đang mở vào localStorage. */
 function saveNow() {
   if (!lsOk) return;
   const fields = {};
-  allFields().forEach(el => { fields[el.id] = el.value; });
+  allFields().forEach(el => {
+    fields[el.id] = (el.type === "checkbox") ? el.checked : el.value;
+  });
   try {
     savedAt = Date.now();
     localStorage.setItem(LS_KEY, JSON.stringify({
-      v: 1,
+      v: 2,
       savedAt: savedAt,
       tab: cur,
-      fields: fields
+      fields: fields,
+      books: books
     }));
   } catch (e) {
-    // Hết dung lượng hoặc bị chặn giữa chừng
     lsOk = false;
     savedAt = null;
   }
   updateSavedLabel();
 }
 
-/* Ghi chậm 400ms để không lưu liên tục khi em đang gõ. */
 function saveSoon() {
   if (!lsOk) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveNow, 400);
 }
 
-/* Đọc dữ liệu đã lưu và điền lại vào các ô. Trả về object đã lưu hoặc null. */
 function loadSaved() {
   if (!lsOk) return null;
   let obj = null;
@@ -787,27 +1016,43 @@ function loadSaved() {
 
   allFields().forEach(el => {
     const v = obj.fields[el.id];
-    // Chỉ nhận chuỗi; gán bằng .value nên an toàn, không dựng HTML.
-    if (typeof v === "string") el.value = v;
+    if (el.type === "checkbox") {
+      if (typeof v === "boolean") el.checked = v;
+    } else if (typeof v === "string") {
+      el.value = v;
+    }
   });
+
+  if (Array.isArray(obj.books)) {
+    books = obj.books
+      .filter(b => b && typeof b === "object")
+      .map(b => ({
+        title:  String(b.title  || ""),
+        author: String(b.author || ""),
+        start:  String(b.start  || ""),
+        end:    String(b.end    || ""),
+        pages:  String(b.pages  || "")
+      }));
+  }
 
   savedAt = typeof obj.savedAt === "number" ? obj.savedAt : null;
   return obj;
 }
 
-/* Xóa dữ liệu đã lưu và đưa mọi ô về số ví dụ ban đầu. */
 function clearSaved() {
   try { localStorage.removeItem(LS_KEY); } catch (e) {}
   savedAt = null;
   allFields().forEach(el => {
-    el.value = el.defaultValue;
+    if (el.type === "checkbox") el.checked = el.defaultChecked;
+    else el.value = el.defaultValue;
     el.classList.remove("bad");
   });
+  books = defaultBooks();
+  renderBooks();
   Object.values(calcs).forEach(f => f());
   updateSavedLabel("cleared");
 }
 
-/* Cập nhật dòng trạng thái lưu ở cột bên phải. */
 function updateSavedLabel(mode) {
   const st = $("saveState"), info = $("saveInfo");
   if (!st || !info) return;
@@ -821,7 +1066,7 @@ function updateSavedLabel(mode) {
   }
   if (mode === "cleared") {
     st.textContent = "đã xóa";
-    info.textContent = "Đã xóa dữ liệu đã lưu. Các ô nhập trở về số ví dụ.";
+    info.textContent = "Đã xóa dữ liệu đã lưu. Các ô nhập và bảng sách trở về ví dụ ban đầu.";
     return;
   }
   if (savedAt) {
@@ -837,7 +1082,7 @@ function updateSavedLabel(mode) {
 
 /* ==================== ĐIỀU HƯỚNG ==================== */
 const titles = {
-  t1: ["Kế hoạch đọc sách và đổi quà", "Tính ngày đọc, tốc độ đọc và đổi số sách đã đọc ra quà."],
+  t1: ["Kế hoạch đọc sách và đổi quà", "Ghi nhật ký từng cuốn sách em đã đọc xong và đổi ra quà."],
   t2: ["Tiền điện gia đình", "Từ chỉ số công tơ, tính tiền điện theo 6 bậc giá sinh hoạt."],
   t3: ["Tiền nước và lượng nước mỗi người dùng", "Từ chỉ số đồng hồ nước, tính tiền và số lít mỗi người mỗi ngày."],
   t4: ["Rác nhựa mỗi ngày và mức giảm", "Tự đếm, tự cân rồi tính phần trăm đã giảm."],
@@ -854,7 +1099,6 @@ function closeMenu() {
   mt.setAttribute("aria-expanded", "false");
 }
 
-/* Mở một mục bất kỳ. doScroll = true khi người dùng bấm menu. */
 function activateTab(t, doScroll) {
   const btn = document.querySelector('.menu button[data-t="' + t + '"]');
   if (!btn || !titles[t]) return;
@@ -873,7 +1117,7 @@ document.querySelectorAll(".menu button").forEach(b => {
   b.addEventListener("click", () => {
     activateTab(b.dataset.t, true);
     closeMenu();
-    saveSoon();          // nhớ luôn cả mục đang mở
+    saveSoon();
   });
 });
 
@@ -891,7 +1135,7 @@ $("dl").addEventListener("click", () => {
 });
 
 $("clearLS").addEventListener("click", () => {
-  if (!window.confirm("Xóa toàn bộ số liệu đã lưu trên máy này và đưa các ô nhập về số ví dụ?")) return;
+  if (!window.confirm("Xóa toàn bộ số liệu đã lưu trên máy này và đưa các ô nhập, bảng sách về ví dụ ban đầu?")) return;
   clearSaved();
 });
 
@@ -918,7 +1162,6 @@ document.addEventListener("input", e => {
   if (el && el.id && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) saveSoon();
 });
 
-/* Ghi nốt phần đang chờ khi rời trang hoặc ẩn tab. */
 window.addEventListener("beforeunload", () => {
   if (!lsOk) return;
   clearTimeout(saveTimer);
@@ -932,7 +1175,9 @@ document.addEventListener("visibilitychange", () => {
 });
 
 /* ==================== CHẠY LẦN ĐẦU ==================== */
-const restored = loadSaved();
+wireBookTable();                     // gắn listener cho bảng (một lần duy nhất)
+const restored = loadSaved();        // đọc localStorage (có thể gán lại books)
+renderBooks();                       // vẽ bảng (dùng books hiện tại)
 if (restored && typeof restored.tab === "string" && titles[restored.tab]) {
   activateTab(restored.tab, false);
 }
